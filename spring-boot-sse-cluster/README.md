@@ -4,29 +4,32 @@ Spring Boot와 Pekko Cluster를 결합한 분산 Server-Sent Events 예제입니
 
 ## 아키텍처
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                        Pekko Cluster                                │
-│                                                                     │
-│  ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐ │
-│  │  Spring Boot 1  │    │  Spring Boot 2  │    │  Spring Boot 3  │ │
-│  │   (port 8091)   │    │   (port 8092)   │    │   (port 8093)   │ │
-│  │                 │    │                 │    │                 │ │
-│  │ ┌─────────────┐ │    │ ┌─────────────┐ │    │ ┌─────────────┐ │ │
-│  │ │Distributed  │◄────►│ │Distributed  │◄────►│ │Distributed  │ │ │
-│  │ │ EventBus    │ │    │ │ EventBus    │ │    │ │ EventBus    │ │ │
-│  │ └─────────────┘ │    │ └─────────────┘ │    │ └─────────────┘ │ │
-│  │       ▲         │    │       ▲         │    │       ▲         │ │
-│  │       │         │    │       │         │    │       │         │ │
-│  │ ┌─────────────┐ │    │ ┌─────────────┐ │    │ ┌─────────────┐ │ │
-│  │ │    SSE      │ │    │ │    SSE      │ │    │ │    SSE      │ │ │
-│  │ │ Controller  │ │    │ │ Controller  │ │    │ │ Controller  │ │ │
-│  │ └─────────────┘ │    │ └─────────────┘ │    │ └─────────────┘ │ │
-│  └─────────────────┘    └─────────────────┘    └─────────────────┘ │
-│                                                                     │
-│               Distributed PubSub (Topic)                           │
-│         ◄────────────────────────────────────────────►             │
-└─────────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph Cluster[Pekko Cluster]
+        subgraph SB1[Spring Boot 1 - port 8091]
+            Bus1[DistributedEventBus]
+            SSE1[SSE Controller]
+            SSE1 --> Bus1
+        end
+
+        subgraph SB2[Spring Boot 2 - port 8092]
+            Bus2[DistributedEventBus]
+            SSE2[SSE Controller]
+            SSE2 --> Bus2
+        end
+
+        subgraph SB3[Spring Boot 3 - port 8093]
+            Bus3[DistributedEventBus]
+            SSE3[SSE Controller]
+            SSE3 --> Bus3
+        end
+
+        Bus1 <-->|Distributed PubSub| Bus2
+        Bus2 <-->|Distributed PubSub| Bus3
+    end
+
+    Client[SSE Clients] --> SB1 & SB2 & SB3
 ```
 
 ## 주요 컴포넌트

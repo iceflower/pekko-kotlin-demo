@@ -128,14 +128,14 @@ fun findById(id: Long): Task? = transaction(database) {
 
 ## Dependencies
 
-| Library                 | Version | Purpose                    |
-|-------------------------|---------|----------------------------|
-| exposed-core            | 0.57.0  | Exposed core functionality |
-| exposed-dao             | 0.57.0  | DAO pattern support        |
-| exposed-jdbc            | 0.57.0  | JDBC integration           |
-| exposed-kotlin-datetime | 0.57.0  | Kotlin datetime support    |
-| H2                      | 2.2.224 | In-memory database         |
-| HikariCP                | 5.1.0   | Connection pooling         |
+| Library                 | Version     | Purpose                    |
+|-------------------------|-------------|----------------------------|
+| exposed-core            | 1.0.0-rc-4  | Exposed core functionality |
+| exposed-dao             | 1.0.0-rc-4  | DAO pattern support        |
+| exposed-jdbc            | 1.0.0-rc-4  | JDBC integration           |
+| exposed-kotlin-datetime | 1.0.0-rc-4  | Kotlin datetime support    |
+| H2                      | 2.2.224     | In-memory database         |
+| HikariCP                | 5.1.0       | Connection pooling         |
 
 ## Comparison with Other Approaches
 

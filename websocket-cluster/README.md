@@ -4,35 +4,34 @@ Pekko Cluster와 WebSocket을 결합한 분산 채팅 예제입니다.
 
 ## 아키텍처
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                        Pekko Cluster                                │
-│                                                                     │
-│  ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐ │
-│  │    Node 1       │    │    Node 2       │    │    Node 3       │ │
-│  │  (port 2551)    │    │  (port 2552)    │    │  (port 2553)    │ │
-│  │                 │    │                 │    │                 │ │
-│  │ ┌─────────────┐ │    │ ┌─────────────┐ │    │ ┌─────────────┐ │ │
-│  │ │DistributedChat│◄───►│DistributedChat│◄───►│DistributedChat│ │ │
-│  │ │   Room      │ │    │ │   Room      │ │    │ │   Room      │ │ │
-│  │ └─────────────┘ │    │ └─────────────┘ │    │ └─────────────┘ │ │
-│  │       ▲         │    │       ▲         │    │       ▲         │ │
-│  │       │         │    │       │         │    │       │         │ │
-│  │ ┌─────────────┐ │    │ ┌─────────────┐ │    │ ┌─────────────┐ │ │
-│  │ │  HTTP/WS    │ │    │ │  HTTP/WS    │ │    │ │  HTTP/WS    │ │ │
-│  │ │  Server     │ │    │ │  Server     │ │    │ │  Server     │ │ │
-│  │ │ (port 8081) │ │    │ │ (port 8082) │ │    │ │ (port 8083) │ │ │
-│  │ └─────────────┘ │    │ └─────────────┘ │    │ └─────────────┘ │ │
-│  └─────────────────┘    └─────────────────┘    └─────────────────┘ │
-│                                                                     │
-│               Distributed PubSub (Topic)                           │
-│         ◄────────────────────────────────────────────►             │
-└─────────────────────────────────────────────────────────────────────┘
-              ▲                    ▲                    ▲
-              │                    │                    │
-         ┌────────┐           ┌────────┐           ┌────────┐
-         │ User A │           │ User B │           │ User C │
-         └────────┘           └────────┘           └────────┘
+```mermaid
+flowchart TB
+    subgraph Cluster[Pekko Cluster]
+        subgraph Node1[Node 1 - port 2551]
+            Chat1[DistributedChatRoom]
+            WS1[HTTP/WS Server<br/>port 8081]
+            WS1 --> Chat1
+        end
+
+        subgraph Node2[Node 2 - port 2552]
+            Chat2[DistributedChatRoom]
+            WS2[HTTP/WS Server<br/>port 8082]
+            WS2 --> Chat2
+        end
+
+        subgraph Node3[Node 3 - port 2553]
+            Chat3[DistributedChatRoom]
+            WS3[HTTP/WS Server<br/>port 8083]
+            WS3 --> Chat3
+        end
+
+        Chat1 <-->|Distributed PubSub| Chat2
+        Chat2 <-->|Distributed PubSub| Chat3
+    end
+
+    UserA[User A] --> WS1
+    UserB[User B] --> WS2
+    UserC[User C] --> WS3
 ```
 
 ## 주요 컴포넌트

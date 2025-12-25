@@ -97,8 +97,8 @@ graph TB
 | Spring Boot  | 4.0.1 | spring-boot 모듈   |
 | JDK          | 25    | Gradle Toolchain |
 | Gradle       | 9.2.1 | 멀티모듈 구성          |
-| Kotest       | 6.0.5 | 테스트 프레임워크        |
-| Exposed      | 0.57.0 | exposed 모듈       |
+| Kotest       | 6.0.5      | 테스트 프레임워크        |
+| Exposed      | 1.0.0-rc-4 | exposed 모듈       |
 
 ## 테스트
 
