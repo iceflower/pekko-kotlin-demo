@@ -32,7 +32,7 @@ class TaskActorTest {
 
     @BeforeEach
     fun setup() {
-        // Initialize fresh database for each test with unique name
+        // 각 테스트마다 고유한 이름으로 새 데이터베이스 초기화
         testCounter++
         DatabaseConfig.init(
             url = "jdbc:h2:mem:pekko_test_$testCounter;DB_CLOSE_DELAY=-1;"
@@ -67,11 +67,11 @@ class TaskActorTest {
         val createProbe: TestProbe<TaskActor.TaskResponse> = testKit.createTestProbe()
         val getProbe: TestProbe<TaskActor.TaskResponse> = testKit.createTestProbe()
 
-        // Create a task first
+        // 먼저 Task 생성
         actor.tell(TaskActor.CreateTask("Find Me", null, createProbe.ref))
         val created = createProbe.receiveMessage() as TaskActor.TaskFound
 
-        // Get the task
+        // Task 조회
         actor.tell(TaskActor.GetTask(created.task.id, getProbe.ref))
         val response = getProbe.receiveMessage()
 
@@ -98,7 +98,7 @@ class TaskActorTest {
         val createProbe: TestProbe<TaskActor.TaskResponse> = testKit.createTestProbe()
         val listProbe: TestProbe<TaskActor.TaskListResponse> = testKit.createTestProbe()
 
-        // Create multiple tasks
+        // 여러 Task 생성
         actor.tell(TaskActor.CreateTask("Task 1", null, createProbe.ref))
         createProbe.receiveMessage()
         actor.tell(TaskActor.CreateTask("Task 2", null, createProbe.ref))
@@ -106,7 +106,7 @@ class TaskActorTest {
         actor.tell(TaskActor.CreateTask("Task 3", null, createProbe.ref))
         createProbe.receiveMessage()
 
-        // Get all
+        // 전체 조회
         actor.tell(TaskActor.GetAllTasks(listProbe.ref))
         val response = listProbe.receiveMessage()
 
@@ -120,11 +120,11 @@ class TaskActorTest {
         val createProbe: TestProbe<TaskActor.TaskResponse> = testKit.createTestProbe()
         val updateProbe: TestProbe<TaskActor.TaskResponse> = testKit.createTestProbe()
 
-        // Create a task
+        // Task 생성
         actor.tell(TaskActor.CreateTask("Original", "Original desc", createProbe.ref))
         val created = createProbe.receiveMessage() as TaskActor.TaskFound
 
-        // Update it
+        // 업데이트
         actor.tell(TaskActor.UpdateTask(created.task.id, "Updated", "Updated desc", true, updateProbe.ref))
         val response = updateProbe.receiveMessage()
 
@@ -142,17 +142,17 @@ class TaskActorTest {
         val createProbe: TestProbe<TaskActor.TaskResponse> = testKit.createTestProbe()
         val toggleProbe: TestProbe<TaskActor.TaskResponse> = testKit.createTestProbe()
 
-        // Create a task (default: not completed)
+        // Task 생성 (기본값: 미완료)
         actor.tell(TaskActor.CreateTask("Toggle Me", null, createProbe.ref))
         val created = createProbe.receiveMessage() as TaskActor.TaskFound
         assertEquals(false, created.task.completed)
 
-        // Toggle to completed
+        // 완료로 토글
         actor.tell(TaskActor.ToggleTask(created.task.id, toggleProbe.ref))
         val toggled1 = toggleProbe.receiveMessage() as TaskActor.TaskFound
         assertEquals(true, toggled1.task.completed)
 
-        // Toggle back to not completed
+        // 다시 미완료로 토글
         actor.tell(TaskActor.ToggleTask(created.task.id, toggleProbe.ref))
         val toggled2 = toggleProbe.receiveMessage() as TaskActor.TaskFound
         assertEquals(false, toggled2.task.completed)
@@ -166,16 +166,16 @@ class TaskActorTest {
         val deleteProbe: TestProbe<TaskActor.DeleteResponse> = testKit.createTestProbe()
         val getProbe: TestProbe<TaskActor.TaskResponse> = testKit.createTestProbe()
 
-        // Create a task
+        // Task 생성
         actor.tell(TaskActor.CreateTask("Delete Me", null, createProbe.ref))
         val created = createProbe.receiveMessage() as TaskActor.TaskFound
 
-        // Delete it
+        // 삭제
         actor.tell(TaskActor.DeleteTask(created.task.id, deleteProbe.ref))
         val deleteResponse = deleteProbe.receiveMessage()
         assertTrue(deleteResponse.deleted)
 
-        // Verify it's gone
+        // 삭제되었는지 확인
         actor.tell(TaskActor.GetTask(created.task.id, getProbe.ref))
         val getResponse = getProbe.receiveMessage()
         assertTrue(getResponse is TaskActor.TaskNotFound)
@@ -189,7 +189,7 @@ class TaskActorTest {
         val toggleProbe: TestProbe<TaskActor.TaskResponse> = testKit.createTestProbe()
         val statsProbe: TestProbe<TaskActor.StatsResponse> = testKit.createTestProbe()
 
-        // Create tasks
+        // Task 생성
         actor.tell(TaskActor.CreateTask("Task 1", null, createProbe.ref))
         val task1 = (createProbe.receiveMessage() as TaskActor.TaskFound).task
         actor.tell(TaskActor.CreateTask("Task 2", null, createProbe.ref))
@@ -197,11 +197,11 @@ class TaskActorTest {
         actor.tell(TaskActor.CreateTask("Task 3", null, createProbe.ref))
         createProbe.receiveMessage()
 
-        // Complete one task
+        // 하나의 Task 완료
         actor.tell(TaskActor.ToggleTask(task1.id, toggleProbe.ref))
         toggleProbe.receiveMessage()
 
-        // Get stats
+        // 통계 조회
         actor.tell(TaskActor.GetStats(statsProbe.ref))
         val stats = statsProbe.receiveMessage()
 

@@ -39,17 +39,17 @@ class ChatRoomTest {
         chatRoom.tell(ChatRoom.Join("alice", aliceProbe.ref()))
         chatRoom.tell(ChatRoom.Join("bob", bobProbe.ref()))
 
-        // Clear join messages
-        // alice receives: "alice joined", "bob joined"
-        aliceProbe.receiveMessage() // alice joined
-        aliceProbe.receiveMessage() // bob joined
-        // bob receives: "bob joined" (bob wasn't there when alice joined)
-        bobProbe.receiveMessage()   // bob joined
+        // 가입 메시지 비우기
+        // alice 수신: "alice joined", "bob joined"
+        aliceProbe.receiveMessage() // alice 가입
+        aliceProbe.receiveMessage() // bob 가입
+        // bob 수신: "bob joined" (alice 가입 시 bob은 없었음)
+        bobProbe.receiveMessage()   // bob 가입
 
-        // Send message
+        // 메시지 전송
         chatRoom.tell(ChatRoom.PostMessage("alice", "Hello everyone!"))
 
-        // Both should receive the message
+        // 둘 다 메시지를 받아야 함
         val aliceMsg = aliceProbe.receiveMessage()
         val bobMsg = bobProbe.receiveMessage()
 
@@ -87,14 +87,14 @@ class ChatRoomTest {
         chatRoom.tell(ChatRoom.Join("alice", aliceProbe.ref()))
         chatRoom.tell(ChatRoom.Join("bob", bobProbe.ref()))
 
-        // Clear join messages
-        // alice receives: "alice joined", "bob joined"
+        // 가입 메시지 비우기
+        // alice 수신: "alice joined", "bob joined"
         aliceProbe.receiveMessage()
         aliceProbe.receiveMessage()
-        // bob receives: "bob joined"
+        // bob 수신: "bob joined"
         bobProbe.receiveMessage()
 
-        // Bob leaves
+        // Bob 퇴장
         chatRoom.tell(ChatRoom.Leave("bob"))
 
         val leaveMsg = aliceProbe.receiveMessage()

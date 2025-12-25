@@ -23,8 +23,8 @@ import java.time.Duration
 import java.util.concurrent.CompletionStage
 
 /**
- * WebSocket routes using Pekko HTTP.
- * Uses MergeHub/BroadcastHub for multi-user chat.
+ * Pekko HTTP를 사용한 WebSocket 라우트.
+ * 멀티 유저 채팅을 위해 MergeHub/BroadcastHub를 사용합니다.
  */
 class WebSocketRoutes(
     private val chatRoom: ActorRef<ChatRoom.Command>,
@@ -34,7 +34,7 @@ class WebSocketRoutes(
     private val askTimeout = Duration.ofSeconds(3)
     private val objectMapper = jacksonObjectMapper()
 
-    // Create a shared broadcast hub for outgoing messages
+    // 발신 메시지를 위한 공유 브로드캐스트 허브 생성
     private val broadcastPair: Pair<Sink<ChatRoom.UserMessage, NotUsed>, Source<ChatRoom.UserMessage, NotUsed>> = run {
         MergeHub.of(ChatRoom.UserMessage::class.java, 256)
             .toMat(BroadcastHub.of(ChatRoom.UserMessage::class.java, 256), Keep.both())
@@ -45,7 +45,7 @@ class WebSocketRoutes(
     private val broadcastSource: Source<ChatRoom.UserMessage, NotUsed> = broadcastPair.second()
 
     fun routes(): Route = concat(
-        // WebSocket endpoint for chat
+        // 채팅용 WebSocket 엔드포인트
         pathPrefix("ws") {
             path("chat") {
                 parameter("username") { username ->
@@ -54,7 +54,7 @@ class WebSocketRoutes(
             }
         },
 
-        // REST endpoint to get user list
+        // 사용자 목록 조회용 REST 엔드포인트
         pathPrefix("api") {
             path("users") {
                 get {
@@ -65,17 +65,17 @@ class WebSocketRoutes(
             }
         },
 
-        // Simple HTML page for testing
+        // 테스트용 간단한 HTML 페이지
         pathSingleSlash {
             getFromResource("static/index.html")
         }
     )
 
     /**
-     * Creates a WebSocket flow that connects a user to the chat room.
+     * 사용자를 채팅방에 연결하는 WebSocket 플로우를 생성합니다.
      */
     private fun createChatFlow(username: String): Flow<Message, Message, NotUsed> {
-        // Create a user-specific actor that forwards messages to the broadcast hub
+        // 브로드캐스트 허브로 메시지를 전달하는 사용자별 액터 생성
         val userActorBehavior: Behavior<ChatRoom.UserMessage> = Behaviors.setup { _ ->
             Behaviors.receiveMessage { msg ->
                 broadcastSink.runWith(Source.single(msg), system)
@@ -89,14 +89,14 @@ class WebSocketRoutes(
             org.apache.pekko.actor.typed.Props.empty()
         )
 
-        // Join the chat room with the user's actor
+        // 사용자 액터로 채팅방에 참여
         chatRoom.tell(ChatRoom.Join(username, userActorRef))
 
-        // Outgoing: broadcast messages to WebSocket
+        // 발신: WebSocket으로 브로드캐스트 메시지
         val outgoing: Source<Message, NotUsed> = broadcastSource
             .map { userMessage: ChatRoom.UserMessage -> toTextMessage(userMessage) }
 
-        // Incoming: messages from WebSocket to ChatRoom
+        // 수신: WebSocket에서 ChatRoom으로 메시지
         val incoming: Sink<Message, NotUsed> = Flow.of(Message::class.java)
             .filter { it.isText }
             .map { msg -> (msg as TextMessage).getStrictText() }

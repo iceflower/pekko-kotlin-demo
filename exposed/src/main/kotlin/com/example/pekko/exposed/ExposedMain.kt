@@ -6,18 +6,18 @@ import java.time.Duration
 import java.util.concurrent.CompletionStage
 
 /**
- * Main entry point for Pekko + Exposed demo.
- * Demonstrates CRUD operations using Pekko Actors with JetBrains Exposed ORM.
+ * Pekko + Exposed 데모 진입점.
+ * Pekko Actor와 JetBrains Exposed ORM을 사용한 CRUD 작업을 시연합니다.
  */
 fun main() {
-    // Initialize database
+    // 데이터베이스 초기화
     val database = DatabaseConfig.init()
     println("Database initialized with H2 in-memory database")
 
-    // Create repository
+    // 레포지토리 생성
     val repository = TaskRepository(database)
 
-    // Create actor system
+    // Actor 시스템 생성
     val system: ActorSystem<TaskActor.Command> = ActorSystem.create(
         TaskActor.create(repository),
         "exposed-demo"
@@ -28,7 +28,7 @@ fun main() {
     try {
         println("\n=== Pekko + Exposed Demo ===\n")
 
-        // Create tasks
+        // Task 생성
         println("Creating tasks...")
         val task1 = askAndGet(system, timeout) { replyTo ->
             TaskActor.CreateTask("Learn Pekko", "Study Pekko actor model", replyTo)
@@ -45,56 +45,56 @@ fun main() {
         }
         println("Created: $task3")
 
-        // Get all tasks
+        // 모든 Task 조회
         println("\n--- All Tasks ---")
         val allTasks = askListAndGet(system, timeout) { replyTo ->
             TaskActor.GetAllTasks(replyTo)
         }
         allTasks.tasks.forEach { println("  - ${it.id}: ${it.title} [${if (it.completed) "X" else " "}]") }
 
-        // Toggle first task
+        // 첫 번째 Task 토글
         println("\n--- Toggle Task 1 ---")
         val toggled = askAndGet(system, timeout) { replyTo ->
             TaskActor.ToggleTask(1L, replyTo)
         }
         println("Toggled: $toggled")
 
-        // Update second task
+        // 두 번째 Task 업데이트
         println("\n--- Update Task 2 ---")
         val updated = askAndGet(system, timeout) { replyTo ->
             TaskActor.UpdateTask(2L, "Master Exposed", "Become an Exposed ORM expert", null, replyTo)
         }
         println("Updated: $updated")
 
-        // Get stats
+        // 통계 조회
         println("\n--- Statistics ---")
         val stats = askStatsAndGet(system, timeout) { replyTo ->
             TaskActor.GetStats(replyTo)
         }
         println("Total tasks: ${stats.total}, Completed: ${stats.completed}")
 
-        // Get single task
+        // 단일 Task 조회
         println("\n--- Get Task by ID ---")
         val found = askAndGet(system, timeout) { replyTo ->
             TaskActor.GetTask(2L, replyTo)
         }
         println("Found: $found")
 
-        // Try to get non-existent task
+        // 존재하지 않는 Task 조회 시도
         println("\n--- Get Non-existent Task ---")
         val notFound = askAndGet(system, timeout) { replyTo ->
             TaskActor.GetTask(999L, replyTo)
         }
         println("Result: $notFound")
 
-        // Delete task
+        // Task 삭제
         println("\n--- Delete Task 3 ---")
         val deleted = askDeleteAndGet(system, timeout) { replyTo ->
             TaskActor.DeleteTask(3L, replyTo)
         }
         println("Deleted: ${deleted.deleted}")
 
-        // Final list
+        // 최종 목록
         println("\n--- Final Task List ---")
         val finalTasks = askListAndGet(system, timeout) { replyTo ->
             TaskActor.GetAllTasks(replyTo)
@@ -108,7 +108,7 @@ fun main() {
         println("\n=== Demo Complete ===")
 
     } finally {
-        // Shutdown
+        // 종료
         system.terminate()
         system.whenTerminated.toCompletableFuture().get()
         DatabaseConfig.shutdown()
@@ -116,7 +116,7 @@ fun main() {
     }
 }
 
-// Helper functions for ask pattern
+// Ask 패턴을 위한 헬퍼 함수
 private fun askAndGet(
     system: ActorSystem<TaskActor.Command>,
     timeout: Duration,

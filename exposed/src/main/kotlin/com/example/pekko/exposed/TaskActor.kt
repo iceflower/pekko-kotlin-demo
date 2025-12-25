@@ -10,20 +10,20 @@ import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
 
 /**
- * Task Actor that handles database operations via Exposed.
- * Uses a dedicated thread pool for blocking database operations.
+ * Exposed를 통해 데이터베이스 작업을 처리하는 Task Actor.
+ * 블로킹 데이터베이스 작업을 위한 전용 스레드 풀을 사용합니다.
  */
 class TaskActor private constructor(
     context: ActorContext<Command>,
     private val repository: TaskRepository
 ) : AbstractBehavior<TaskActor.Command>(context) {
 
-    // Dedicated executor for blocking database operations
+    // 블로킹 데이터베이스 작업을 위한 전용 실행기
     private val dbExecutor = Executors.newFixedThreadPool(4)
 
     sealed interface Command
 
-    // Commands
+    // 커맨드
     data class CreateTask(
         val title: String,
         val description: String?,
@@ -44,11 +44,11 @@ class TaskActor private constructor(
     data class DeleteTask(val id: Long, val replyTo: ActorRef<DeleteResponse>) : Command
     data class GetStats(val replyTo: ActorRef<StatsResponse>) : Command
 
-    // Internal messages for async DB results
+    // 비동기 DB 결과를 위한 내부 메시지
     private data class DbResult<T>(val result: T, val replyTo: ActorRef<in T>) : Command
     private data class DbError(val error: Throwable, val replyTo: ActorRef<*>) : Command
 
-    // Responses
+    // 응답
     sealed interface TaskResponse
     data class TaskFound(val task: Task) : TaskResponse
     data object TaskNotFound : TaskResponse
@@ -128,8 +128,8 @@ class TaskActor private constructor(
     }
 
     private fun onDbError(error: DbError): Behavior<Command> {
-        context.log.error("Database error", error.error)
-        // Send error response if applicable
+        context.log.error("데이터베이스 오류", error.error)
+        // 해당되는 경우 에러 응답 전송
         when (val replyTo = error.replyTo) {
             is ActorRef<*> -> {
                 @Suppress("UNCHECKED_CAST")
@@ -153,7 +153,7 @@ class TaskActor private constructor(
 
     companion object {
         fun create(repository: TaskRepository): Behavior<Command> = Behaviors.setup { context ->
-            context.log.info("TaskActor started")
+            context.log.info("TaskActor 시작됨")
             TaskActor(context, repository)
         }
     }

@@ -7,7 +7,7 @@ import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 
 /**
- * Database configuration with HikariCP connection pool.
+ * HikariCP 커넥션 풀을 사용한 데이터베이스 설정.
  */
 object DatabaseConfig {
 
@@ -15,7 +15,7 @@ object DatabaseConfig {
     private var database: Database? = null
 
     /**
-     * Initialize the database connection pool.
+     * 데이터베이스 커넥션 풀 초기화.
      */
     fun init(
         url: String = "jdbc:h2:mem:pekko_demo;DB_CLOSE_DELAY=-1;",
@@ -39,7 +39,7 @@ object DatabaseConfig {
 
         database = Database.connect(dataSource!!)
 
-        // Create tables
+        // 테이블 생성
         transaction(database!!) {
             SchemaUtils.create(Users, Tasks, TaskAssignments)
         }
@@ -48,12 +48,12 @@ object DatabaseConfig {
     }
 
     /**
-     * Get the current database instance.
+     * 현재 데이터베이스 인스턴스 반환.
      */
     fun getDatabase(): Database? = database
 
     /**
-     * Shutdown the connection pool.
+     * 커넥션 풀 종료.
      */
     fun shutdown() {
         dataSource?.close()
