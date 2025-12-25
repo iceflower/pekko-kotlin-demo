@@ -3,3 +3,9 @@ plugins {
 }
 
 rootProject.name = "pekko-kotlin-demo"
+
+include("core")
+include("cluster")
+include("persistence")
+include("http")
+include("grpc")

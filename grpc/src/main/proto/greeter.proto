@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package com.example.pekko.grpc;
+
+option java_multiple_files = true;
+option java_package = "com.example.pekko.grpc.proto";
+option java_outer_classname = "GreeterProto";
+
+// Greeter 서비스 정의
+service GreeterService {
+    // 단순 인사 RPC
+    rpc SayHello (HelloRequest) returns (HelloReply);
+
+    // 서버 스트리밍 - 여러 인사 반환
+    rpc SayHelloStream (HelloRequest) returns (stream HelloReply);
+}
+
+message HelloRequest {
+    string name = 1;
+}
+
+message HelloReply {
+    string message = 1;
+    int64 timestamp = 2;
+}
