@@ -7,7 +7,7 @@ plugins {
 
 val scalaBinaryVersion: String by rootProject.extra
 val grpcVersion = "1.76.2"
-val protobufVersion = "3.25.5"
+val protobufVersion = "4.29.3"
 
 dependencies {
     implementation("org.apache.pekko:pekko-actor-typed_$scalaBinaryVersion")
