@@ -1,16 +1,17 @@
 package com.example.pekko.exposed
 
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.SortOrder
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.insertAndGetId
-import org.jetbrains.exposed.sql.selectAll
-import org.jetbrains.exposed.sql.transactions.transaction
-import org.jetbrains.exposed.sql.update
+import org.jetbrains.exposed.v1.core.ResultRow
+import org.jetbrains.exposed.v1.core.SortOrder
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.jdbc.Database
+import org.jetbrains.exposed.v1.jdbc.deleteWhere
+import org.jetbrains.exposed.v1.jdbc.insertAndGetId
+import org.jetbrains.exposed.v1.jdbc.selectAll
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import org.jetbrains.exposed.v1.jdbc.update
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 /**
  * Task data class.
@@ -32,6 +33,7 @@ class TaskRepository(private val database: Database) {
     /**
      * Create a new task.
      */
+    @OptIn(ExperimentalTime::class)
     fun create(title: String, description: String? = null): Task = transaction(database) {
         val now = Clock.System.now()
         val id = Tasks.insertAndGetId {
@@ -73,6 +75,7 @@ class TaskRepository(private val database: Database) {
     /**
      * Update a task.
      */
+    @OptIn(ExperimentalTime::class)
     fun update(id: Long, title: String? = null, description: String? = null, completed: Boolean? = null): Task? =
         transaction(database) {
             val updated = Tasks.update({ Tasks.id eq id }) {

@@ -3,7 +3,7 @@ plugins {
 }
 
 val scalaBinaryVersion: String by rootProject.extra
-val exposedVersion = "0.61.0"
+val exposedVersion = "1.0.0-rc-4"
 
 dependencies {
     // Pekko

@@ -1,7 +1,7 @@
 package com.example.pekko.exposed
 
-import org.jetbrains.exposed.dao.id.LongIdTable
-import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
+import org.jetbrains.exposed.v1.core.dao.id.LongIdTable
+import org.jetbrains.exposed.v1.datetime.timestamp
 
 /**
  * Task table definition using Exposed DSL.
