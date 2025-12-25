@@ -31,13 +31,13 @@ graph TB
     Root --> Quarkus[quarkus<br/>Quarkus 통합]
 ```
 
-| 모듈                                | 설명                             | 실행 명령어                          |
-|-----------------------------------|--------------------------------|----------------------------------|
-| [**core**](./core/)               | Actor 기본, Streams, Ask 패턴      | `./gradlew :core:run`            |
+| 모듈                                | 설명                              | 실행 명령어                           |
+|-----------------------------------|---------------------------------|----------------------------------|
+| [**core**](./core/)               | Actor 기본, Streams, Ask 패턴       | `./gradlew :core:run`            |
 | [**cluster**](./cluster/)         | 클러스터링, 싱글톤                      | `./gradlew :cluster:run`         |
 | [**persistence**](./persistence/) | 이벤트 소싱, 상태 복구                   | `./gradlew :persistence:run`     |
-| [**http**](./http/)               | REST API 서버 (port 8080)        | `./gradlew :http:run`            |
-| [**grpc**](./grpc/)               | gRPC 서버 (port 50051)           | `./gradlew :grpc:run`            |
+| [**http**](./http/)               | REST API 서버 (port 8080)         | `./gradlew :http:run`            |
+| [**grpc**](./grpc/)               | gRPC 서버 (port 50051)            | `./gradlew :grpc:run`            |
 | [**spring-boot**](./spring-boot/) | Spring Boot + Pekko (port 8081) | `./gradlew :spring-boot:bootRun` |
 | [**quarkus**](./quarkus/)         | Quarkus + Pekko (port 8082)     | `./gradlew :quarkus:quarkusDev`  |
 
