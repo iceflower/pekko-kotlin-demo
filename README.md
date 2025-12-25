@@ -22,38 +22,83 @@
 ```mermaid
 graph TB
     Root[pekko-kotlin-demo]
-    Root --> Core[core<br/>기본 Actor 예제]
-    Root --> Cluster[cluster<br/>클러스터링]
-    Root --> Persistence[persistence<br/>이벤트 소싱]
-    Root --> HTTP[http<br/>REST API]
-    Root --> GRPC[grpc<br/>gRPC 서비스]
-    Root --> SpringBoot[spring-boot<br/>Spring Boot 통합]
-    Root --> Quarkus[quarkus<br/>Quarkus 통합]
+
+    subgraph Core[기본 모듈]
+        C1[core<br/>기본 Actor]
+        C2[cluster<br/>클러스터링]
+        C3[persistence<br/>이벤트 소싱]
+        C4[http<br/>REST API]
+        C5[grpc<br/>gRPC]
+        C6[exposed<br/>Exposed ORM]
+    end
+
+    subgraph Realtime[실시간 통신]
+        R1[websocket<br/>WebSocket]
+        R2[sse<br/>SSE]
+        R3[websocket-cluster<br/>WS 클러스터]
+        R4[sse-cluster<br/>SSE 클러스터]
+    end
+
+    subgraph SpringBoot[Spring Boot 통합]
+        S1[spring-boot<br/>기본]
+        S2[spring-boot-cluster<br/>클러스터]
+        S3[spring-boot-optional-cluster<br/>선택적 클러스터]
+        S4[spring-boot-websocket<br/>WebSocket]
+        S5[spring-boot-sse<br/>SSE]
+        S6[spring-boot-websocket-cluster<br/>WS 클러스터]
+        S7[spring-boot-sse-cluster<br/>SSE 클러스터]
+    end
+
+    Root --> Core
+    Root --> Realtime
+    Root --> SpringBoot
 ```
 
-| 모듈                                | 설명                              | 실행 명령어                           |
-|-----------------------------------|---------------------------------|----------------------------------|
-| [**core**](./core/)               | Actor 기본, Streams, Ask 패턴       | `./gradlew :core:run`            |
-| [**cluster**](./cluster/)         | 클러스터링, 싱글톤                      | `./gradlew :cluster:run`         |
-| [**persistence**](./persistence/) | 이벤트 소싱, 상태 복구                   | `./gradlew :persistence:run`     |
-| [**http**](./http/)               | REST API 서버 (port 8080)         | `./gradlew :http:run`            |
-| [**grpc**](./grpc/)               | gRPC 서버 (port 50051)            | `./gradlew :grpc:run`            |
-| [**spring-boot**](./spring-boot/) | Spring Boot + Pekko (port 8081) | `./gradlew :spring-boot:bootRun` |
-| [**quarkus**](./quarkus/)         | Quarkus + Pekko (port 8082)     | `./gradlew :quarkus:quarkusDev`  |
+### 기본 모듈
+
+| 모듈                                | 설명                       | 실행 명령어                       |
+|-----------------------------------|--------------------------|------------------------------|
+| [**core**](./core/)               | Actor 기본, Streams, Ask 패턴 | `./gradlew :core:run`        |
+| [**cluster**](./cluster/)         | 클러스터링, 싱글톤                | `./gradlew :cluster:run`     |
+| [**persistence**](./persistence/) | 이벤트 소싱, 상태 복구             | `./gradlew :persistence:run` |
+| [**http**](./http/)               | REST API 서버 (port 8080)   | `./gradlew :http:run`        |
+| [**grpc**](./grpc/)               | gRPC 서버 (port 50051)      | `./gradlew :grpc:run`        |
+| [**exposed**](./exposed/)         | Exposed ORM + Actor 통합    | `./gradlew :exposed:run`     |
+
+### 실시간 통신 모듈 (Pure Pekko)
+
+| 모듈                                        | 설명                      | 실행 명령어                           |
+|-------------------------------------------|-------------------------|----------------------------------|
+| [**websocket**](./websocket/)             | WebSocket 채팅 (port 8080) | `./gradlew :websocket:run`       |
+| [**sse**](./sse/)                         | SSE 이벤트 스트림 (port 8081)  | `./gradlew :sse:run`             |
+| [**websocket-cluster**](./websocket-cluster/) | WebSocket 클러스터          | `./gradlew :websocket-cluster:run` |
+| [**sse-cluster**](./sse-cluster/)         | SSE 클러스터                 | `./gradlew :sse-cluster:run`     |
+
+### Spring Boot 통합 모듈
+
+| 모듈                                                            | 설명                     | 실행 명령어                                       |
+|---------------------------------------------------------------|------------------------|----------------------------------------------|
+| [**spring-boot**](./spring-boot/)                             | Spring Boot 기본 (port 8081) | `./gradlew :spring-boot:bootRun`             |
+| [**spring-boot-cluster**](./spring-boot-cluster/)             | Spring Boot + 클러스터     | `./gradlew :spring-boot-cluster:bootRun`     |
+| [**spring-boot-optional-cluster**](./spring-boot-optional-cluster/) | 선택적 클러스터 모드            | `./gradlew :spring-boot-optional-cluster:bootRun` |
+| [**spring-boot-websocket**](./spring-boot-websocket/)         | WebSocket (port 8082)  | `./gradlew :spring-boot-websocket:bootRun`   |
+| [**spring-boot-sse**](./spring-boot-sse/)                     | SSE (port 8083)        | `./gradlew :spring-boot-sse:bootRun`         |
+| [**spring-boot-websocket-cluster**](./spring-boot-websocket-cluster/) | WebSocket 클러스터         | `./gradlew :spring-boot-websocket-cluster:bootRun` |
+| [**spring-boot-sse-cluster**](./spring-boot-sse-cluster/)     | SSE 클러스터               | `./gradlew :spring-boot-sse-cluster:bootRun` |
 
 > 각 모듈의 README.md에서 상세 문서를 확인할 수 있습니다.
 
 ## 기술 스택
 
-| 기술           | 버전     | 비고             |
-|--------------|--------|----------------|
-| Kotlin       | 2.3.0  |                |
-| Apache Pekko | 1.4.0  | Akka 2.6.x 포크  |
-| Spring Boot  | 4.0.1  | spring-boot 모듈 |
-| Quarkus      | 3.30.5 | quarkus 모듈     |
-| JDK          | 21+    | Gradle Toolchain |
-| Gradle       | 9.2.1  | 멀티모듈 구성        |
-| Kotest       | 6.0.5  | 테스트 프레임워크      |
+| 기술           | 버전    | 비고               |
+|--------------|-------|------------------|
+| Kotlin       | 2.3.0 |                  |
+| Apache Pekko | 1.4.0 | Akka 2.6.x 포크    |
+| Spring Boot  | 4.0.1 | spring-boot 모듈   |
+| JDK          | 25    | Gradle Toolchain |
+| Gradle       | 9.2.1 | 멀티모듈 구성          |
+| Kotest       | 6.0.5 | 테스트 프레임워크        |
+| Exposed      | 0.57.0 | exposed 모듈       |
 
 ## 테스트
 
@@ -74,7 +119,7 @@ Kotest FunSpec 스타일로 작성된 테스트:
 - `http`: TaskRegistryTest
 - `grpc`: GreeterActorTest
 - `spring-boot`: TaskActorTest
-- `quarkus`: TaskActorTest
+- `exposed`: TaskActorTest
 
 ## 학습 자료
 
@@ -84,7 +129,9 @@ Kotest FunSpec 스타일로 작성된 테스트:
 - **[http/README.md](./http/README.md)** - REST API 가이드
 - **[grpc/README.md](./grpc/README.md)** - gRPC 가이드
 - **[spring-boot/README.md](./spring-boot/README.md)** - Spring Boot 통합 가이드
-- **[quarkus/README.md](./quarkus/README.md)** - Quarkus 통합 가이드
+- **[exposed/README.md](./exposed/README.md)** - Exposed ORM 가이드
+- **[websocket/README.md](./websocket/README.md)** - WebSocket 가이드
+- **[sse/README.md](./sse/README.md)** - SSE 가이드
 
 ## Windows 한글 인코딩
 
