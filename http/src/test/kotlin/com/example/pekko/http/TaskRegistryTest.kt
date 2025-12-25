@@ -50,8 +50,7 @@ class TaskRegistryTest : FunSpec({
         registry.tell(TaskRegistry.GetTask(created.id, getProbe.ref()))
         val response = getProbe.receiveMessage()
 
-        response.shouldBeInstanceOf<TaskRegistry.TaskResponse.Found>()
-        (response as TaskRegistry.TaskResponse.Found).task.title shouldBe "조회할 작업"
+        response.shouldBeInstanceOf<TaskRegistry.TaskResponse.Found>().task.title shouldBe "조회할 작업"
     }
 
     test("존재하지 않는 Task 조회 시 NotFound를 반환해야 한다") {
@@ -77,8 +76,7 @@ class TaskRegistryTest : FunSpec({
         registry.tell(TaskRegistry.UpdateTask(created.id, "업데이트 후", true, updateProbe.ref()))
         val response = updateProbe.receiveMessage()
 
-        response.shouldBeInstanceOf<TaskRegistry.TaskResponse.Found>()
-        val updated = (response as TaskRegistry.TaskResponse.Found).task
+        val updated = response.shouldBeInstanceOf<TaskRegistry.TaskResponse.Found>().task
         updated.title shouldBe "업데이트 후"
         updated.completed shouldBe true
     }
