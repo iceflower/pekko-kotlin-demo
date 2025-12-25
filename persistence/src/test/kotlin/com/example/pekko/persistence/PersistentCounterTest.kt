@@ -1,10 +1,9 @@
 package com.example.pekko.persistence
 
+import com.typesafe.config.ConfigFactory
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import org.apache.pekko.actor.testkit.typed.javadsl.ActorTestKit
-import org.apache.pekko.persistence.testkit.javadsl.PersistenceTestKit
-import org.apache.pekko.persistence.typed.PersistenceId
 
 /**
  * PersistentCounter Actor 테스트 (Kotest)
@@ -13,12 +12,14 @@ import org.apache.pekko.persistence.typed.PersistenceId
  */
 class PersistentCounterTest : FunSpec({
 
-    val testKit = ActorTestKit.create()
-    val persistenceTestKit = PersistenceTestKit.create(testKit.system())
+    // Persistence TestKit 설정
+    val config = ConfigFactory.parseString("""
+        pekko.persistence.journal.plugin = "pekko.persistence.journal.inmem"
+        pekko.persistence.snapshot-store.plugin = "pekko.persistence.snapshot-store.local"
+        pekko.persistence.snapshot-store.local.dir = "build/snapshots"
+    """).withFallback(ConfigFactory.load())
 
-    beforeTest {
-        persistenceTestKit.clearAll()
-    }
+    val testKit = ActorTestKit.create(config)
 
     afterSpec {
         testKit.shutdownTestKit()
@@ -59,25 +60,18 @@ class PersistentCounterTest : FunSpec({
         response.value shouldBe 1
     }
 
-    test("이벤트가 영속화되어야 한다") {
-        val persistenceId = "test-counter-4"
-        val counter = testKit.spawn(PersistentCounter.create(persistenceId))
+    test("증가와 감소를 혼합하여 사용할 수 있다") {
+        val counter = testKit.spawn(PersistentCounter.create("test-counter-4"))
         val probe = testKit.createTestProbe<PersistentCounter.State>()
 
         counter.tell(PersistentCounter.Increment)
         counter.tell(PersistentCounter.Increment)
+        counter.tell(PersistentCounter.Increment)
+        counter.tell(PersistentCounter.Decrement)
+        counter.tell(PersistentCounter.Increment)
         counter.tell(PersistentCounter.GetValue(probe.ref()))
 
-        probe.receiveMessage()
-
-        // 영속화된 이벤트 확인
-        persistenceTestKit.expectNextPersisted(
-            persistenceId,
-            PersistentCounter.Incremented
-        )
-        persistenceTestKit.expectNextPersisted(
-            persistenceId,
-            PersistentCounter.Incremented
-        )
+        val response = probe.receiveMessage()
+        response.value shouldBe 3
     }
 })

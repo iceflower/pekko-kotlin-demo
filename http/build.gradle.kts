@@ -17,7 +17,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.0")
 
     testImplementation("org.apache.pekko:pekko-actor-testkit-typed_$scalaBinaryVersion")
-    testImplementation("org.apache.pekko:pekko-http-testkit_$scalaBinaryVersion")
+    testImplementation("org.apache.pekko:pekko-http-testkit_$scalaBinaryVersion:$pekkoHttpVersion")
 }
 
 application {
