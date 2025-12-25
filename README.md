@@ -47,7 +47,7 @@ graph TB
 |------|------|------|
 | Kotlin | 2.3.0 | |
 | Apache Pekko | 1.4.0 | Akka 2.6.x 포크 |
-| Spring Boot | 3.4.13 | spring-boot 모듈 |
+| Spring Boot | 4.0.1 | spring-boot 모듈 |
 | JDK | 21+ | Gradle Toolchain |
 | Gradle | 9.2.1 | 멀티모듈 구성 |
 | Kotest | 5.9.1 | 테스트 프레임워크 |
