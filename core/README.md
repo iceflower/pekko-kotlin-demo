@@ -86,8 +86,33 @@ Source.range(1, 10)
 
 ## 테스트
 
+Kotest FunSpec 스타일로 작성된 테스트:
+
 ```bash
 ./gradlew :core:test
+```
+
+### 테스트 예제 (Kotest)
+
+```kotlin
+class CounterActorTest : FunSpec({
+
+    val testKit = ActorTestKit.create()
+
+    afterSpec {
+        testKit.shutdownTestKit()
+    }
+
+    test("Counter는 초기값이 0이어야 한다") {
+        val counter = testKit.spawn(CounterActor.create())
+        val probe = testKit.createTestProbe<CounterActor.Value>()
+
+        counter.tell(CounterActor.GetValue(probe.ref()))
+
+        val response = probe.receiveMessage()
+        response.count shouldBe 0
+    }
+})
 ```
 
 테스트 파일:

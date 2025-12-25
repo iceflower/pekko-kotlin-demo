@@ -27,6 +27,7 @@ graph TB
     Root --> Persistence[persistence<br/>이벤트 소싱]
     Root --> HTTP[http<br/>REST API]
     Root --> GRPC[grpc<br/>gRPC 서비스]
+    Root --> SpringBoot[spring-boot<br/>Spring Boot 통합]
 ```
 
 | 모듈 | 설명 | 실행 명령어 |
@@ -36,6 +37,7 @@ graph TB
 | [**persistence**](./persistence/) | 이벤트 소싱, 상태 복구 | `./gradlew :persistence:run` |
 | [**http**](./http/) | REST API 서버 (port 8080) | `./gradlew :http:run` |
 | [**grpc**](./grpc/) | gRPC 서버 (port 50051) | `./gradlew :grpc:run` |
+| [**spring-boot**](./spring-boot/) | Spring Boot + Pekko (port 8081) | `./gradlew :spring-boot:bootRun` |
 
 > 각 모듈의 README.md에서 상세 문서를 확인할 수 있습니다.
 
@@ -45,10 +47,14 @@ graph TB
 |------|------|------|
 | Kotlin | 2.3.0 | |
 | Apache Pekko | 1.3.0 | Akka 2.6.x 포크 |
-| JDK | 25 | Gradle Toolchain 자동 다운로드 |
+| Spring Boot | 3.4.1 | spring-boot 모듈 |
+| JDK | 21+ | Gradle Toolchain |
 | Gradle | 9.x | 멀티모듈 구성 |
+| Kotest | 5.9.1 | 테스트 프레임워크 |
 
 ## 테스트
+
+Kotest FunSpec 스타일로 작성된 테스트:
 
 ```bash
 # 전체 테스트
@@ -58,6 +64,14 @@ graph TB
 ./gradlew :core:test
 ```
 
+각 모듈별 테스트 파일:
+- `core`: CounterActorTest, HelloWorldActorTest
+- `cluster`: SingletonCounterTest
+- `persistence`: PersistentCounterTest
+- `http`: TaskRegistryTest
+- `grpc`: GreeterActorTest
+- `spring-boot`: TaskActorTest
+
 ## 학습 자료
 
 - **[PEKKO_GUIDE.md](./PEKKO_GUIDE.md)** - Actor Model 개념, 패턴, 설정 등 심화 학습
@@ -65,6 +79,7 @@ graph TB
 - **[persistence/README.md](./persistence/README.md)** - 이벤트 소싱 가이드
 - **[http/README.md](./http/README.md)** - REST API 가이드
 - **[grpc/README.md](./grpc/README.md)** - gRPC 가이드
+- **[spring-boot/README.md](./spring-boot/README.md)** - Spring Boot 통합 가이드
 
 ## Windows 한글 인코딩
 

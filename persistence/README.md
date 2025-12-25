@@ -254,31 +254,46 @@ EventSourcedBehavior.create(...)
 
 ## 테스트
 
+Kotest FunSpec 스타일로 작성된 테스트:
+
+```bash
+./gradlew :persistence:test
+```
+
+### 테스트 예제 (Kotest)
+
 ```kotlin
-@Test
-fun `상태가 복구되어야 한다`() {
-    val testKit = ActorTestKit.create()
-    val probe = testKit.createTestProbe<State>()
+class PersistentCounterTest : FunSpec({
 
-    // 첫 번째 인스턴스
-    val counter1 = testKit.spawn(
-        PersistentCounter.create(PersistenceId.ofUniqueId("test-counter"))
-    )
-    counter1.tell(Increment)
-    counter1.tell(Increment)
-    counter1.tell(GetValue(probe.ref()))
-    assertEquals(2, probe.receiveMessage().value)
+    // 인메모리 저널 설정
+    val config = ConfigFactory.parseString("""
+        pekko.persistence.journal.plugin = "pekko.persistence.journal.inmem"
+        pekko.persistence.snapshot-store.plugin = "pekko.persistence.snapshot-store.local"
+        pekko.persistence.snapshot-store.local.dir = "target/test-snapshots"
+    """).withFallback(ConfigFactory.load())
 
-    // Actor 종료 후 재생성
-    testKit.stop(counter1)
+    val testKit = ActorTestKit.create(config)
 
-    val counter2 = testKit.spawn(
-        PersistentCounter.create(PersistenceId.ofUniqueId("test-counter"))
-    )
-    counter2.tell(GetValue(probe.ref()))
-    assertEquals(2, probe.receiveMessage().value)  // 상태 복구됨!
+    afterSpec {
+        testKit.shutdownTestKit()
+    }
+
+    test("Increment로 상태가 증가해야 한다") {
+        val probe = testKit.createTestProbe<PersistentCounter.State>()
+        val counter = testKit.spawn(
+            PersistentCounter.create(PersistenceId.ofUniqueId("test-counter-1"))
+        )
+
+        counter.tell(PersistentCounter.Increment)
+        counter.tell(PersistentCounter.GetValue(probe.ref()))
+
+        probe.receiveMessage().value shouldBe 1
+    }
 }
 ```
+
+테스트 파일:
+- `PersistentCounterTest.kt`
 
 ---
 

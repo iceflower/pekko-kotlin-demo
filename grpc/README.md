@@ -395,6 +395,43 @@ override fun sayHello(
 
 ---
 
+## 테스트
+
+Kotest FunSpec 스타일로 작성된 테스트:
+
+```bash
+./gradlew :grpc:test
+```
+
+### 테스트 예제 (Kotest)
+
+```kotlin
+class GreeterActorTest : FunSpec({
+
+    val testKit = ActorTestKit.create()
+
+    afterSpec {
+        testKit.shutdownTestKit()
+    }
+
+    test("GreeterActor가 인사 메시지를 생성해야 한다") {
+        val greeter = testKit.spawn(GreeterActor.create())
+        val probe = testKit.createTestProbe<GreeterActor.Greeting>()
+
+        greeter.tell(GreeterActor.Greet("홍길동", probe.ref()))
+
+        val response = probe.receiveMessage()
+        response.message shouldContain "홍길동"
+        response.message shouldContain "안녕하세요"
+    }
+})
+```
+
+테스트 파일:
+- `GreeterActorTest.kt`
+
+---
+
 ## 참고 자료
 
 - [gRPC 공식 문서](https://grpc.io/docs/)

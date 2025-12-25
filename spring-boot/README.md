@@ -91,8 +91,43 @@ curl -X DELETE http://localhost:8081/api/tasks/{id}
 4. **테스트 용이성**: Spring Test와 Pekko TestKit 함께 활용
 5. **기존 Spring 에코시스템 활용**: Spring Security, Spring Data 등과 조합 가능
 
+## 테스트
+
+Kotest FunSpec 스타일로 작성된 테스트:
+
+```bash
+./gradlew :spring-boot:test
+```
+
+### 테스트 예제 (Kotest)
+
+```kotlin
+class TaskActorTest : FunSpec({
+
+    val testKit = ActorTestKit.create()
+
+    afterSpec {
+        testKit.shutdownTestKit()
+    }
+
+    test("CreateTask로 새 Task를 생성할 수 있다") {
+        val taskActor = testKit.spawn(TaskActor.create())
+        val probe = testKit.createTestProbe<TaskResponse>()
+
+        taskActor.tell(CreateTask("테스트 작업", "설명", probe.ref()))
+
+        val response = probe.receiveMessage()
+        response.shouldBeInstanceOf<SingleTask>().task.title shouldBe "테스트 작업"
+    }
+})
+```
+
+테스트 파일:
+- `TaskActorTest.kt`
+
 ## 의존성
 
 - Spring Boot 3.4.1
 - Apache Pekko 1.3.0
 - Kotlin 2.3.0
+- Kotest 5.9.1

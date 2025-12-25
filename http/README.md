@@ -292,6 +292,42 @@ curl -X DELETE http://localhost:8080/api/tasks/1
 
 ---
 
+## 테스트
+
+Kotest FunSpec 스타일로 작성된 테스트:
+
+```bash
+./gradlew :http:test
+```
+
+### 테스트 예제 (Kotest)
+
+```kotlin
+class TaskRegistryTest : FunSpec({
+
+    val testKit = ActorTestKit.create()
+
+    afterSpec {
+        testKit.shutdownTestKit()
+    }
+
+    test("CreateTask는 새 Task를 생성해야 한다") {
+        val taskRegistry = testKit.spawn(TaskRegistry.create())
+        val probe = testKit.createTestProbe<TaskRegistry.Task>()
+
+        taskRegistry.tell(TaskRegistry.CreateTask("테스트 작업", probe.ref()))
+
+        val createdTask = probe.receiveMessage()
+        createdTask.title shouldBe "테스트 작업"
+    }
+})
+```
+
+테스트 파일:
+- `TaskRegistryTest.kt`
+
+---
+
 ## 의존성
 
 ```kotlin

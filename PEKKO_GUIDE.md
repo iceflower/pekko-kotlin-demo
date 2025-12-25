@@ -304,32 +304,40 @@ pekko {
 
 ---
 
-## 테스트 (TestKit)
+## 테스트 (Kotest + TestKit)
+
+이 프로젝트는 **Kotest** 테스트 프레임워크를 사용합니다.
 
 ```kotlin
-class CounterActorTest {
-    companion object {
-        private val testKit = ActorTestKit.create()
+class CounterActorTest : FunSpec({
 
-        @JvmStatic
-        @AfterAll
-        fun cleanup() = testKit.shutdownTestKit()
+    val testKit = ActorTestKit.create()
+
+    afterSpec {
+        testKit.shutdownTestKit()
     }
 
-    @Test
-    fun `Increment 후 값이 증가해야 한다`() {
+    test("Increment 후 값이 증가해야 한다") {
         val counter = testKit.spawn(CounterActor.create())
-        val probe = testKit.createTestProbe<Value>()
+        val probe = testKit.createTestProbe<CounterActor.Value>()
 
-        counter.tell(Increment)
-        counter.tell(Increment)
-        counter.tell(GetValue(probe.ref()))
+        counter.tell(CounterActor.Increment)
+        counter.tell(CounterActor.Increment)
+        counter.tell(CounterActor.GetValue(probe.ref()))
 
         val response = probe.receiveMessage()
-        assertEquals(2, response.count)
+        response.count shouldBe 2
     }
-}
+})
 ```
+
+### Kotest 스타일
+
+| 스타일 | 설명 |
+|--------|------|
+| `FunSpec` | 간단한 `test("...") { }` 블록 |
+| `shouldBe` | Kotest 매처로 값 검증 |
+| `shouldBeInstanceOf<T>()` | 타입 검증 및 스마트 캐스트 |
 
 ### TestProbe
 
@@ -370,3 +378,4 @@ class CounterActorTest {
 - [persistence/README.md](./persistence/README.md) - 이벤트 소싱, 스냅샷
 - [http/README.md](./http/README.md) - REST API, Routing DSL
 - [grpc/README.md](./grpc/README.md) - gRPC, Protocol Buffers
+- [spring-boot/README.md](./spring-boot/README.md) - Spring Boot 통합

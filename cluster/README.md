@@ -229,6 +229,42 @@ dependencies {
 
 ---
 
+## 테스트
+
+Kotest FunSpec 스타일로 작성된 테스트:
+
+```bash
+./gradlew :cluster:test
+```
+
+### 테스트 예제 (Kotest)
+
+```kotlin
+class SingletonCounterTest : FunSpec({
+
+    val testKit = ActorTestKit.create()
+
+    afterSpec {
+        testKit.shutdownTestKit()
+    }
+
+    test("SingletonCounter는 초기값이 0이어야 한다") {
+        val counter = testKit.spawn(SingletonCounter.create())
+        val probe = testKit.createTestProbe<SingletonCounter.Value>()
+
+        counter.tell(SingletonCounter.GetValue(probe.ref()))
+
+        val response = probe.receiveMessage()
+        response.count shouldBe 0
+    }
+})
+```
+
+테스트 파일:
+- `SingletonCounterTest.kt`
+
+---
+
 ## 참고 자료
 
 - [Pekko Cluster 문서](https://pekko.apache.org/docs/pekko/current/typed/cluster.html)
