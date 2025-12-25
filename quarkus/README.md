@@ -58,7 +58,7 @@ flowchart TB
 
 ```bash
 # 프로젝트 루트에서
-GRADLE_USER_HOME=/c/gradle-home ./gradlew :quarkus:quarkusDev
+./gradlew :quarkus:quarkusDev
 ```
 
 서버가 시작되면 http://localhost:8082 에서 접근 가능합니다.

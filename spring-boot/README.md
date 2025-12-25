@@ -4,23 +4,25 @@
 
 ## 아키텍처
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    Spring Boot Application                   │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  ┌──────────────┐     Ask Pattern      ┌─────────────────┐  │
-│  │   REST API   │ ──────────────────▶  │   TaskActor     │  │
-│  │  Controller  │ ◀──────────────────  │   (Behavior)    │  │
-│  └──────────────┘     Response         └─────────────────┘  │
-│         │                                      │            │
-│         │                                      │            │
-│  ┌──────▼──────┐                      ┌───────▼───────┐    │
-│  │ Spring MVC  │                      │ ActorSystem   │    │
-│  │  (Servlet)  │                      │ (Pekko Bean)  │    │
-│  └─────────────┘                      └───────────────┘    │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph SpringBoot[Spring Boot Application]
+        subgraph Controllers[REST Controllers]
+            TaskCtrl[TaskController<br/>/api/tasks]
+        end
+
+        subgraph Actors[Pekko Actors]
+            TaskActor[TaskActor]
+        end
+
+        subgraph Config[Configuration]
+            PekkoConfig[PekkoConfig]
+        end
+    end
+
+    Client[HTTP Client] -->|REST API| TaskCtrl
+    TaskCtrl -->|Ask Pattern| TaskActor
+    PekkoConfig -->|Creates| TaskActor
 ```
 
 ## 주요 구성 요소
