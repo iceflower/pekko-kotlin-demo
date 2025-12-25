@@ -130,4 +130,4 @@ class TaskActorTest : FunSpec({
 - Spring Boot 4.0.1
 - Apache Pekko 1.4.0
 - Kotlin 2.3.0
-- Kotest 5.9.1
+- Kotest 6.0.5

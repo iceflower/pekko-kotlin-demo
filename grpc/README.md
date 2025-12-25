@@ -323,8 +323,8 @@ plugins {
     id("com.google.protobuf") version "0.9.4"
 }
 
-val grpcVersion = "1.62.2"
-val protobufVersion = "3.25.3"
+val grpcVersion = "1.76.2"
+val protobufVersion = "3.25.5"
 
 dependencies {
     implementation("io.grpc:grpc-stub:$grpcVersion")

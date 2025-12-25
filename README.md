@@ -50,7 +50,7 @@ graph TB
 | Spring Boot | 4.0.1 | spring-boot 모듈 |
 | JDK | 21+ | Gradle Toolchain |
 | Gradle | 9.2.1 | 멀티모듈 구성 |
-| Kotest | 5.9.1 | 테스트 프레임워크 |
+| Kotest | 6.0.5 | 테스트 프레임워크 |
 
 ## 테스트
 

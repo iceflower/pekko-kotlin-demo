@@ -17,7 +17,7 @@ allprojects {
 subprojects {
     apply(plugin = "org.jetbrains.kotlin.jvm")
 
-    val kotestVersion = "5.9.1"
+    val kotestVersion = "6.0.5"
 
     dependencies {
         "implementation"(platform("org.apache.pekko:pekko-bom_${rootProject.extra["scalaBinaryVersion"]}:${rootProject.extra["pekkoVersion"]}"))
