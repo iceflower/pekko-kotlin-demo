@@ -27,16 +27,19 @@ Actor는 동시성 프로그래밍의 기본 단위입니다. 각 Actor는:
 - **한 번에 하나의 메시지**만 처리 (Thread-safe)
 - **다른 Actor를 생성**할 수 있음
 
-```
-┌─────────────┐     메시지      ┌─────────────┐
-│   Actor A   │ ──────────────▶ │   Actor B   │
-│  (Sender)   │                 │  (Receiver) │
-└─────────────┘                 └─────────────┘
-                                      │
-                                      ▼
-                                 ┌─────────┐
-                                 │ Mailbox │ ← 메시지 큐
-                                 └─────────┘
+```mermaid
+flowchart LR
+    subgraph Sender
+        A[Actor A]
+    end
+
+    subgraph Receiver
+        B[Actor B]
+        M[(Mailbox<br/>메시지 큐)]
+    end
+
+    A -->|메시지| M
+    M --> B
 ```
 
 ### Typed Actor (권장)
@@ -189,9 +192,11 @@ context.pipeToSelf(asyncFuture) { result, error ->
 
 ### 기본 개념
 
-```
-Source ──▶ Flow ──▶ Flow ──▶ Sink
-(생산자)    (변환)    (변환)   (소비자)
+```mermaid
+flowchart LR
+    Source[Source<br/>생산자] --> Flow1[Flow<br/>변환]
+    Flow1 --> Flow2[Flow<br/>변환]
+    Flow2 --> Sink[Sink<br/>소비자]
 ```
 
 ### 예제
@@ -322,34 +327,9 @@ grpcurl -plaintext -d '{"name":"Pekko"}' \
 
 ---
 
-## 구현된 모듈
+## 다음 단계
 
-### 1. 클러스터링 (`cluster/`)
-`pekko-cluster-typed`로 구현된 분산 Actor 시스템:
-- **ClusterListener**: 클러스터 이벤트(멤버 가입/탈퇴) 모니터링
-- **SingletonCounter**: 클러스터 전체에서 단일 인스턴스 보장
-
-### 2. Persistence (`persistence/`)
-`pekko-persistence-typed`로 구현된 이벤트 소싱:
-- **PersistentCounter**: 상태를 이벤트로 저장하고 재시작 시 복구
-- LevelDB 저널 사용
-
-### 3. HTTP (`http/`)
-`pekko-http`로 구현된 REST API 서버:
-- Task CRUD API (GET, POST, PUT, DELETE)
-- Jackson을 사용한 JSON 직렬화
-- Actor 기반 상태 관리
-
-### 4. gRPC (`grpc/`)
-`grpc-java`와 Pekko Actor를 결합한 gRPC 서비스:
-- **SayHello**: Unary RPC
-- **SayHelloStream**: Server Streaming RPC
-- protobuf-gradle-plugin으로 스텁 생성
-
----
-
-## 추가 학습 자료
-
-- **Cluster Sharding**: 대용량 Actor를 여러 노드에 분산
-- **Distributed Data**: CRDTs를 사용한 분산 상태 관리
-- **Alpakka**: 외부 시스템(Kafka, DB 등) 연동 커넥터
+1. **클러스터링**: `pekko-cluster-typed`로 분산 Actor 시스템 구축
+2. **Persistence**: `pekko-persistence-typed`로 이벤트 소싱 구현
+3. **HTTP**: `pekko-http`로 REST API 서버 구축
+4. **gRPC**: `pekko-grpc`로 gRPC 서비스 구현
