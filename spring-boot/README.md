@@ -127,7 +127,7 @@ class TaskActorTest : FunSpec({
 
 ## 의존성
 
-- Spring Boot 3.4.1
-- Apache Pekko 1.3.0
+- Spring Boot 3.4.13
+- Apache Pekko 1.4.0
 - Kotlin 2.3.0
 - Kotest 5.9.1

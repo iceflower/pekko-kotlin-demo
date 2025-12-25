@@ -1,6 +1,6 @@
 plugins {
     application
-    id("org.springframework.boot") version "3.4.1"
+    id("org.springframework.boot") version "3.4.13"
     id("io.spring.dependency-management") version "1.1.7"
     kotlin("plugin.spring") version "2.3.0"
 }

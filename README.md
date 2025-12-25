@@ -1,7 +1,7 @@
 # Pekko Kotlin Demo
 
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.3.0-7F52FF?logo=kotlin&logoColor=white)](https://kotlinlang.org/)
-[![Pekko](https://img.shields.io/badge/Pekko-1.3.0-005596)](https://pekko.apache.org/)
+[![Pekko](https://img.shields.io/badge/Pekko-1.4.0-005596)](https://pekko.apache.org/)
 [![JDK](https://img.shields.io/badge/JDK-25-007396?logo=openjdk&logoColor=white)](https://openjdk.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
@@ -46,8 +46,8 @@ graph TB
 | 기술 | 버전 | 비고 |
 |------|------|------|
 | Kotlin | 2.3.0 | |
-| Apache Pekko | 1.3.0 | Akka 2.6.x 포크 |
-| Spring Boot | 3.4.1 | spring-boot 모듈 |
+| Apache Pekko | 1.4.0 | Akka 2.6.x 포크 |
+| Spring Boot | 3.4.13 | spring-boot 모듈 |
 | JDK | 21+ | Gradle Toolchain |
 | Gradle | 9.2.1 | 멀티모듈 구성 |
 | Kotest | 5.9.1 | 테스트 프레임워크 |

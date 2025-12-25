@@ -3,7 +3,7 @@ plugins {
 }
 
 val scalaBinaryVersion by extra("2.13")
-val pekkoVersion by extra("1.3.0")
+val pekkoVersion by extra("1.4.0")
 
 allprojects {
     group = "com.example"
