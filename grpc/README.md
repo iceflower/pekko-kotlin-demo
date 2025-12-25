@@ -10,13 +10,13 @@ gRPC는 Google이 개발한 고성능 RPC(Remote Procedure Call) 프레임워크
 
 ### gRPC vs REST
 
-| 특성 | gRPC | REST |
-|------|------|------|
-| **프로토콜** | HTTP/2 | HTTP/1.1 |
-| **데이터 형식** | Protocol Buffers (바이너리) | JSON (텍스트) |
-| **스트리밍** | 양방향 지원 | 제한적 |
-| **코드 생성** | 자동 (protoc) | 수동 |
-| **성능** | 높음 | 보통 |
+| 특성       | gRPC                       | REST        |
+|----------|----------------------------|-------------|
+| **프로토콜**  | HTTP/2                     | HTTP/1.1    |
+| **데이터 형식** | Protocol Buffers (바이너리)    | JSON (텍스트)  |
+| **스트리밍**  | 양방향 지원                     | 제한적         |
+| **코드 생성** | 자동 (protoc)                | 수동          |
+| **성능**    | 높음                         | 보통          |
 
 ### RPC 유형
 
@@ -307,11 +307,11 @@ sequenceDiagram
     O-->>C: 스트리밍 완료
 ```
 
-| 메서드 | 설명 |
-|--------|------|
-| `onNext(value)` | 응답 값 전송 (여러 번 호출 가능) |
-| `onCompleted()` | 스트림 정상 종료 |
-| `onError(throwable)` | 에러로 스트림 종료 |
+| 메서드                  | 설명                |
+|----------------------|-------------------|
+| `onNext(value)`      | 응답 값 전송 (여러 번 호출 가능) |
+| `onCompleted()`      | 스트림 정상 종료          |
+| `onError(throwable)` | 에러로 스트림 종료         |
 
 ---
 
@@ -383,15 +383,15 @@ override fun sayHello(
 
 ### gRPC 상태 코드
 
-| 코드 | 의미 |
-|------|------|
-| `OK` | 성공 |
-| `INVALID_ARGUMENT` | 잘못된 인수 |
-| `NOT_FOUND` | 리소스 없음 |
-| `ALREADY_EXISTS` | 이미 존재함 |
-| `PERMISSION_DENIED` | 권한 없음 |
-| `INTERNAL` | 서버 내부 오류 |
-| `UNAVAILABLE` | 서비스 사용 불가 |
+| 코드                  | 의미       |
+|---------------------|----------|
+| `OK`                | 성공       |
+| `INVALID_ARGUMENT`  | 잘못된 인수   |
+| `NOT_FOUND`         | 리소스 없음   |
+| `ALREADY_EXISTS`    | 이미 존재함   |
+| `PERMISSION_DENIED` | 권한 없음    |
+| `INTERNAL`          | 서버 내부 오류 |
+| `UNAVAILABLE`       | 서비스 사용 불가 |
 
 ---
 

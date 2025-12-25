@@ -10,11 +10,11 @@ Pekko Cluster는 여러 JVM 노드에서 Actor 시스템을 연결하여 분산 
 
 ### 핵심 개념
 
-| 개념 | 설명 |
-|------|------|
-| **Node** | 클러스터에 참여하는 개별 JVM 인스턴스 |
-| **Member** | 클러스터에 가입한 노드 |
-| **Leader** | 클러스터 상태 변경을 조정하는 노드 |
+| 개념            | 설명                        |
+|---------------|---------------------------|
+| **Node**      | 클러스터에 참여하는 개별 JVM 인스턴스    |
+| **Member**    | 클러스터에 가입한 노드              |
+| **Leader**    | 클러스터 상태 변경을 조정하는 노드       |
 | **Seed Node** | 새 노드가 클러스터에 가입할 때 연락하는 초기 노드 |
 
 ### 클러스터 상태 다이어그램
@@ -76,12 +76,12 @@ flowchart LR
 
 #### 주요 이벤트
 
-| 이벤트 | 설명 |
-|--------|------|
-| `MemberUp` | 새 멤버가 클러스터에 가입 완료 |
-| `MemberRemoved` | 멤버가 클러스터에서 제거됨 |
-| `UnreachableMember` | 멤버에 연결할 수 없음 |
-| `ReachableMember` | 멤버가 다시 연결 가능해짐 |
+| 이벤트                 | 설명               |
+|---------------------|------------------|
+| `MemberUp`          | 새 멤버가 클러스터에 가입 완료 |
+| `MemberRemoved`     | 멤버가 클러스터에서 제거됨   |
+| `UnreachableMember` | 멤버에 연결할 수 없음     |
+| `ReachableMember`   | 멤버가 다시 연결 가능해짐   |
 
 #### 코드 예제
 
@@ -162,12 +162,12 @@ pekko {
 
 ### 주요 설정 항목
 
-| 설정 | 설명 |
-|------|------|
-| `actor.provider` | `"cluster"`로 설정하여 클러스터 모드 활성화 |
-| `remote.artery.canonical.port` | 노드 간 통신에 사용할 포트 |
-| `cluster.seed-nodes` | 클러스터 부트스트랩을 위한 시드 노드 목록 |
-| `cluster.downing-provider-class` | Split Brain 해결 전략 |
+| 설정                              | 설명                       |
+|---------------------------------|--------------------------|
+| `actor.provider`                | `"cluster"`로 설정하여 클러스터 모드 활성화 |
+| `remote.artery.canonical.port`  | 노드 간 통신에 사용할 포트          |
+| `cluster.seed-nodes`            | 클러스터 부트스트랩을 위한 시드 노드 목록  |
+| `cluster.downing-provider-class` | Split Brain 해결 전략        |
 
 ---
 
@@ -208,12 +208,12 @@ flowchart TB
 
 ### SBR 전략
 
-| 전략 | 설명 |
-|------|------|
+| 전략              | 설명                    |
+|-----------------|----------------------|
 | `keep-majority` | 다수 파티션 유지, 소수 파티션 down |
-| `keep-oldest` | 가장 오래된 노드가 있는 파티션 유지 |
-| `keep-referee` | 지정된 레퍼리 노드가 있는 파티션 유지 |
-| `down-all` | 모든 노드 down (안전 모드) |
+| `keep-oldest`   | 가장 오래된 노드가 있는 파티션 유지  |
+| `keep-referee`  | 지정된 레퍼리 노드가 있는 파티션 유지 |
+| `down-all`      | 모든 노드 down (안전 모드)    |
 
 ---
 

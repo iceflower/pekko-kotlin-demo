@@ -56,13 +56,13 @@ http/
 
 ### 엔드포인트
 
-| Method | Path | 설명 |
-|--------|------|------|
-| `GET` | `/api/tasks` | 모든 Task 조회 |
-| `GET` | `/api/tasks/{id}` | 특정 Task 조회 |
-| `POST` | `/api/tasks` | 새 Task 생성 |
-| `PUT` | `/api/tasks/{id}` | Task 업데이트 |
-| `DELETE` | `/api/tasks/{id}` | Task 삭제 |
+| Method   | Path              | 설명          |
+|----------|-------------------|-------------|
+| `GET`    | `/api/tasks`      | 모든 Task 조회  |
+| `GET`    | `/api/tasks/{id}` | 특정 Task 조회  |
+| `POST`   | `/api/tasks`      | 새 Task 생성   |
+| `PUT`    | `/api/tasks/{id}` | Task 업데이트   |
+| `DELETE` | `/api/tasks/{id}` | Task 삭제     |
 
 ### 요청/응답 흐름
 
@@ -208,23 +208,23 @@ class TaskRoutes(
 
 ### 주요 디렉티브
 
-| 디렉티브 | 설명 |
-|----------|------|
-| `pathPrefix(segment)` | URL 경로 접두사 매칭 |
-| `path(matcher)` | URL 경로 완전 매칭 |
-| `pathEnd` | 경로 끝 매칭 |
-| `get`, `post`, `put`, `delete` | HTTP 메서드 매칭 |
-| `entity(unmarshaller)` | 요청 본문 파싱 |
-| `complete(status, body, marshaller)` | 응답 반환 |
-| `onSuccess(future)` | 비동기 결과 처리 |
+| 디렉티브                               | 설명           |
+|------------------------------------|--------------|
+| `pathPrefix(segment)`              | URL 경로 접두사 매칭 |
+| `path(matcher)`                    | URL 경로 완전 매칭  |
+| `pathEnd`                          | 경로 끝 매칭       |
+| `get`, `post`, `put`, `delete`     | HTTP 메서드 매칭   |
+| `entity(unmarshaller)`             | 요청 본문 파싱      |
+| `complete(status, body, marshaller)` | 응답 반환         |
+| `onSuccess(future)`                | 비동기 결과 처리     |
 
 ### 경로 매처
 
-| 매처 | 설명 | 예시 |
-|------|------|------|
-| `segment()` | 단일 경로 세그먼트 | `/api/users` → `"users"` |
+| 매처              | 설명           | 예시                        |
+|-----------------|--------------|---------------------------|
+| `segment()`     | 단일 경로 세그먼트   | `/api/users` → `"users"`  |
 | `longSegment()` | Long 타입 세그먼트 | `/api/tasks/123` → `123L` |
-| `intSegment()` | Int 타입 세그먼트 | `/api/items/42` → `42` |
+| `intSegment()`  | Int 타입 세그먼트  | `/api/items/42` → `42`    |
 
 ---
 
@@ -282,13 +282,13 @@ curl -X DELETE http://localhost:8080/api/tasks/1
 
 ## HTTP 상태 코드
 
-| 코드 | 의미 | 사용 |
-|------|------|------|
-| `200 OK` | 성공 | GET, PUT 성공 |
-| `201 Created` | 생성됨 | POST 성공 |
-| `204 No Content` | 내용 없음 | DELETE 성공 |
-| `404 Not Found` | 찾을 수 없음 | 리소스가 존재하지 않음 |
-| `500 Internal Server Error` | 서버 오류 | 예상치 못한 오류 |
+| 코드                          | 의미      | 사용            |
+|-----------------------------|---------|---------------|
+| `200 OK`                    | 성공      | GET, PUT 성공   |
+| `201 Created`               | 생성됨     | POST 성공       |
+| `204 No Content`            | 내용 없음   | DELETE 성공     |
+| `404 Not Found`             | 찾을 수 없음 | 리소스가 존재하지 않음  |
+| `500 Internal Server Error` | 서버 오류   | 예상치 못한 오류     |
 
 ---
 

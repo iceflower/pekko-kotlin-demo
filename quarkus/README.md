@@ -27,13 +27,13 @@ flowchart TB
 
 ## Quarkus vs Spring Boot
 
-| 특성 | Quarkus | Spring Boot |
-|------|---------|-------------|
-| **시작 시간** | ~0.5초 (JVM), ~10ms (Native) | ~2-3초 |
-| **메모리 사용** | 낮음 (특히 Native) | 보통 |
-| **DI 컨테이너** | CDI (ArC) | Spring IoC |
-| **빌드 방식** | 빌드 타임 최적화 | 런타임 리플렉션 |
-| **Native Image** | 1등급 지원 | 지원 (제한적) |
+| 특성              | Quarkus                       | Spring Boot |
+|-----------------|-------------------------------|-------------|
+| **시작 시간**       | ~0.5초 (JVM), ~10ms (Native)   | ~2-3초       |
+| **메모리 사용**      | 낮음 (특히 Native)                | 보통          |
+| **DI 컨테이너**     | CDI (ArC)                     | Spring IoC  |
+| **빌드 방식**       | 빌드 타임 최적화                     | 런타임 리플렉션    |
+| **Native Image** | 1등급 지원                        | 지원 (제한적)    |
 
 ## 주요 구성 요소
 
@@ -65,13 +65,13 @@ flowchart TB
 
 ## API 엔드포인트
 
-| Method | Endpoint | 설명 |
-|--------|----------|------|
-| GET | `/api/tasks` | 모든 Task 조회 |
-| GET | `/api/tasks/{id}` | ID로 Task 조회 |
-| POST | `/api/tasks` | 새 Task 생성 |
-| PATCH | `/api/tasks/{id}/toggle` | Task 완료 상태 토글 |
-| DELETE | `/api/tasks/{id}` | Task 삭제 |
+| Method | Endpoint                   | 설명            |
+|--------|----------------------------|---------------|
+| GET    | `/api/tasks`               | 모든 Task 조회    |
+| GET    | `/api/tasks/{id}`          | ID로 Task 조회   |
+| POST   | `/api/tasks`               | 새 Task 생성     |
+| PATCH  | `/api/tasks/{id}/toggle`   | Task 완료 상태 토글 |
+| DELETE | `/api/tasks/{id}`          | Task 삭제       |
 
 ## API 사용 예시
 

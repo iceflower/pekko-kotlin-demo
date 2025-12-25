@@ -134,10 +134,10 @@ The `ChatWebSocketHandler` bridges:
 
 ## Comparison with Pure Pekko Module
 
-| Feature | Spring Boot | Pure Pekko |
-|---------|-------------|------------|
-| Framework | Spring WebSocket | Pekko HTTP |
-| Configuration | @EnableWebSocket | Routes DSL |
-| Session Handling | Spring managed | ActorSource |
-| Dependencies | Spring ecosystem | Minimal |
-| Use Case | Enterprise apps | Microservices |
+| Feature          | Spring Boot      | Pure Pekko     |
+|------------------|------------------|----------------|
+| Framework        | Spring WebSocket | Pekko HTTP     |
+| Configuration    | @EnableWebSocket | Routes DSL     |
+| Session Handling | Spring managed   | ActorSource    |
+| Dependencies     | Spring ecosystem | Minimal        |
+| Use Case         | Enterprise apps  | Microservices  |

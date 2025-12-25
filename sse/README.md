@@ -62,10 +62,10 @@ data: <payload>
 
 ### REST API
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/publish?type=<eventType>` | Publish an event (body = data) |
-| GET | `/api/stats` | Get publisher statistics |
+| Method | Endpoint                        | Description                    |
+|--------|---------------------------------|--------------------------------|
+| POST   | `/api/publish?type=<eventType>` | Publish an event (body = data) |
+| GET    | `/api/stats`                    | Get publisher statistics       |
 
 ### Publish Event
 
@@ -77,12 +77,12 @@ curl -X POST "http://localhost:8081/api/publish?type=notification" \
 
 ## Event Types
 
-| Type | Description |
-|------|-------------|
-| `notification` | General notifications |
-| `alert` | Important alerts |
-| `update` | Data updates |
-| `heartbeat` | Keep-alive (automatic every 30s) |
+| Type           | Description                     |
+|----------------|---------------------------------|
+| `notification` | General notifications           |
+| `alert`        | Important alerts                |
+| `update`       | Data updates                    |
+| `heartbeat`    | Keep-alive (automatic every 30s) |
 
 ## Testing with Browser
 
@@ -100,9 +100,9 @@ curl -X POST "http://localhost:8081/api/publish?type=notification" -d "Test mess
 
 ## SSE vs WebSocket
 
-| Feature | SSE | WebSocket |
-|---------|-----|-----------|
-| Direction | Server → Client only | Bidirectional |
-| Protocol | HTTP | WS (upgrade from HTTP) |
-| Reconnection | Automatic | Manual |
-| Use Case | Notifications, feeds | Chat, games |
+| Feature      | SSE                  | WebSocket              |
+|--------------|----------------------|------------------------|
+| Direction    | Server → Client only | Bidirectional          |
+| Protocol     | HTTP                 | WS (upgrade from HTTP) |
+| Reconnection | Automatic            | Manual                 |
+| Use Case     | Notifications, feeds | Chat, games            |

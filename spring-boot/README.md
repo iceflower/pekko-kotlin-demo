@@ -53,13 +53,13 @@ flowchart TB
 
 ## API 엔드포인트
 
-| Method | Endpoint | 설명 |
-|--------|----------|------|
-| GET | `/api/tasks` | 모든 Task 조회 |
-| GET | `/api/tasks/{id}` | ID로 Task 조회 |
-| POST | `/api/tasks` | 새 Task 생성 |
-| PATCH | `/api/tasks/{id}/toggle` | Task 완료 상태 토글 |
-| DELETE | `/api/tasks/{id}` | Task 삭제 |
+| Method | Endpoint                   | 설명            |
+|--------|----------------------------|---------------|
+| GET    | `/api/tasks`               | 모든 Task 조회    |
+| GET    | `/api/tasks/{id}`          | ID로 Task 조회   |
+| POST   | `/api/tasks`               | 새 Task 생성     |
+| PATCH  | `/api/tasks/{id}/toggle`   | Task 완료 상태 토글 |
+| DELETE | `/api/tasks/{id}`          | Task 삭제       |
 
 ## API 사용 예시
 

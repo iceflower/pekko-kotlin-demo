@@ -78,11 +78,11 @@ data: {"data": "<payload>", "timestamp": 1703123456789}
 
 ### REST API
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/events` | SSE event stream |
-| POST | `/api/publish?type=<eventType>` | Publish an event (body = data) |
-| GET | `/api/stats` | Get publisher statistics |
+| Method | Endpoint                        | Description                    |
+|--------|---------------------------------|--------------------------------|
+| GET    | `/api/events`                   | SSE event stream               |
+| POST   | `/api/publish?type=<eventType>` | Publish an event (body = data) |
+| GET    | `/api/stats`                    | Get publisher statistics       |
 
 ### Publish Event
 
@@ -108,13 +108,13 @@ Response:
 
 ## Event Types
 
-| Type | Description |
-|------|-------------|
-| `connected` | Sent on initial connection |
-| `notification` | General notifications |
-| `alert` | Important alerts |
-| `update` | Data updates |
-| `heartbeat` | Keep-alive (automatic every 30s) |
+| Type           | Description                      |
+|----------------|----------------------------------|
+| `connected`    | Sent on initial connection       |
+| `notification` | General notifications            |
+| `alert`        | Important alerts                 |
+| `update`       | Data updates                     |
+| `heartbeat`    | Keep-alive (automatic every 30s) |
 
 ## Testing
 
@@ -153,10 +153,10 @@ The integration uses Reactor's `Sinks` to bridge:
 
 ## Comparison with Pure Pekko Module
 
-| Feature | Spring Boot | Pure Pekko |
-|---------|-------------|------------|
-| Framework | Spring WebFlux | Pekko HTTP |
-| SSE Format | ServerSentEvent<T> | Source<ServerSentEvent> |
-| Reactive | Project Reactor | Pekko Streams |
-| Dependencies | Spring ecosystem | Minimal |
-| Use Case | Enterprise apps | Microservices |
+| Feature      | Spring Boot          | Pure Pekko              |
+|--------------|----------------------|-------------------------|
+| Framework    | Spring WebFlux       | Pekko HTTP              |
+| SSE Format   | ServerSentEvent<T>   | Source<ServerSentEvent> |
+| Reactive     | Project Reactor      | Pekko Streams           |
+| Dependencies | Spring ecosystem     | Minimal                 |
+| Use Case     | Enterprise apps      | Microservices           |

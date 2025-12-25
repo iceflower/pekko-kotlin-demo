@@ -62,9 +62,9 @@ Plain text messages are sent as-is.
 
 ### REST API
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/users` | Get list of online users |
+| Method | Endpoint     | Description              |
+|--------|--------------|--------------------------|
+| GET    | `/api/users` | Get list of online users |
 
 ## Testing with wscat
 
