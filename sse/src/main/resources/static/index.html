@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pekko SSE Demo</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        #events { border: 1px solid #ccc; height: 300px; overflow-y: scroll; padding: 10px; margin-bottom: 20px; background: #f9f9f9; }
+        .event { padding: 5px; margin: 5px 0; border-left: 3px solid #007bff; background: white; }
+        .event.heartbeat { border-color: #ccc; color: #999; }
+        .event-type { font-weight: bold; color: #007bff; }
+        .timestamp { color: #666; font-size: 0.8em; }
+        #publishForm { background: #f0f0f0; padding: 15px; border-radius: 5px; }
+        input, textarea { width: 100%; padding: 10px; margin: 5px 0; box-sizing: border-box; }
+        button { padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        #status { margin-bottom: 10px; padding: 5px 10px; border-radius: 3px; }
+        .connected { background: #d4edda; color: #155724; }
+        .disconnected { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <h1>Pekko Server-Sent Events Demo</h1>
+
+    <div id="status" class="disconnected">Disconnected</div>
+
+    <h2>Events</h2>
+    <div id="events"></div>
+
+    <h2>Publish Event</h2>
+    <div id="publishForm">
+        <label for="eventType">Event Type:</label>
+        <input type="text" id="eventType" placeholder="notification" value="notification">
+
+        <label for="eventData">Event Data:</label>
+        <textarea id="eventData" rows="3" placeholder="Enter event data...">Hello from the browser!</textarea>
+
+        <button onclick="publishEvent()">Publish Event</button>
+    </div>
+
+    <script>
+        let eventSource;
+
+        function connect() {
+            eventSource = new EventSource('/events');
+
+            eventSource.onopen = function() {
+                document.getElementById('status').textContent = 'Connected';
+                document.getElementById('status').className = 'connected';
+                addEvent('system', 'Connected to SSE stream');
+            };
+
+            eventSource.onerror = function(e) {
+                document.getElementById('status').textContent = 'Disconnected';
+                document.getElementById('status').className = 'disconnected';
+                addEvent('error', 'Connection error');
+            };
+
+            // Listen for all event types
+            eventSource.addEventListener('notification', function(e) {
+                addEvent('notification', e.data, e.lastEventId);
+            });
+
+            eventSource.addEventListener('alert', function(e) {
+                addEvent('alert', e.data, e.lastEventId);
+            });
+
+            eventSource.addEventListener('update', function(e) {
+                addEvent('update', e.data, e.lastEventId);
+            });
+
+            eventSource.addEventListener('heartbeat', function(e) {
+                addEvent('heartbeat', 'heartbeat', e.lastEventId);
+            });
+
+            // Generic message handler
+            eventSource.onmessage = function(e) {
+                addEvent('message', e.data, e.lastEventId);
+            };
+        }
+
+        function addEvent(type, data, id) {
+            const events = document.getElementById('events');
+            const div = document.createElement('div');
+            div.className = 'event' + (type === 'heartbeat' ? ' heartbeat' : '');
+
+            const timestamp = new Date().toLocaleTimeString();
+            div.innerHTML = `
+                <span class="event-type">[${type}]</span>
+                ${id ? `<span class="timestamp">id: ${id}</span>` : ''}
+                <span class="timestamp">${timestamp}</span>
+                <div>${data}</div>
+            `;
+
+            events.appendChild(div);
+            events.scrollTop = events.scrollHeight;
+        }
+
+        async function publishEvent() {
+            const type = document.getElementById('eventType').value;
+            const data = document.getElementById('eventData').value;
+
+            try {
+                const response = await fetch(`/api/publish?type=${encodeURIComponent(type)}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: data
+                });
+
+                if (response.ok) {
+                    addEvent('system', `Published: ${type}`);
+                } else {
+                    addEvent('error', 'Failed to publish');
+                }
+            } catch (e) {
+                addEvent('error', 'Error: ' + e.message);
+            }
+        }
+
+        // Connect on page load
+        connect();
+    </script>
+</body>
+</html>

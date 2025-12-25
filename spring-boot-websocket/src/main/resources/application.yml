@@ -1,0 +1,12 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: spring-boot-websocket
+
+logging:
+  level:
+    root: INFO
+    org.apache.pekko: INFO
+    com.example.pekko: DEBUG

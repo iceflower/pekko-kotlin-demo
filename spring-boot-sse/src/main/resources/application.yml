@@ -1,0 +1,12 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: spring-boot-sse
+
+logging:
+  level:
+    root: INFO
+    org.apache.pekko: INFO
+    com.example.pekko: DEBUG
