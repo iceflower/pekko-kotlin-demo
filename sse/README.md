@@ -11,23 +11,24 @@ This module demonstrates Server-Sent Events (SSE) implementation using pure Pekk
 
 ## Architecture
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                    Pekko HTTP Server                    │
-├─────────────────────────────────────────────────────────┤
-│  SSE Endpoint (/events)                                 │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐     │
-│  │  Client 1   │  │  Client 2   │  │  Client 3   │     │
-│  │  (SSE sub)  │  │  (SSE sub)  │  │  (SSE sub)  │     │
-│  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘     │
-│         │                │                │             │
-│         └────────────────┼────────────────┘             │
-│                          ▼                              │
-│                  ┌───────────────┐                      │
-│                  │ EventPublisher│◄──── POST /api/publish
-│                  │    Actor      │                      │
-│                  └───────────────┘                      │
-└─────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph PekkoHTTP[Pekko HTTP Server]
+        subgraph SSE[SSE Endpoint /events]
+            C1["Client 1<br/>(SSE sub)"]
+            C2["Client 2<br/>(SSE sub)"]
+            C3["Client 3<br/>(SSE sub)"]
+        end
+
+        EP["EventPublisher<br/>Actor"]
+
+        API["POST /api/publish"]
+
+        C1 --> EP
+        C2 --> EP
+        C3 --> EP
+        API --> EP
+    end
 ```
 
 ## Running

@@ -102,27 +102,34 @@ $ curl http://localhost:8080/api/counter/mode
 ## Architecture
 
 ### Standalone Mode
-```
-┌─────────────────────────────────────────┐
-│            ActorSystem                  │
-│  ┌─────────────────────────────────┐   │
-│  │     Counter Actor (regular)     │   │
-│  └─────────────────────────────────┘   │
-└─────────────────────────────────────────┘
+
+```mermaid
+flowchart TB
+    subgraph ActorSystem[ActorSystem]
+        Counter["Counter Actor<br/>(regular)"]
+    end
 ```
 
 ### Cluster Mode
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    Pekko Cluster                            │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐         │
-│  │   Node 1    │  │   Node 2    │  │   Node 3    │         │
-│  │ ┌─────────┐ │  │             │  │             │         │
-│  │ │Counter  │ │  │   (proxy)   │  │   (proxy)   │         │
-│  │ │Singleton│ │  │             │  │             │         │
-│  │ └─────────┘ │  │             │  │             │         │
-│  └─────────────┘  └─────────────┘  └─────────────┘         │
-└─────────────────────────────────────────────────────────────┘
+
+```mermaid
+flowchart TB
+    subgraph Cluster[Pekko Cluster]
+        subgraph Node1[Node 1]
+            Singleton["Counter<br/>Singleton"]
+        end
+
+        subgraph Node2[Node 2]
+            Proxy2["(proxy)"]
+        end
+
+        subgraph Node3[Node 3]
+            Proxy3["(proxy)"]
+        end
+
+        Proxy2 -.-> Singleton
+        Proxy3 -.-> Singleton
+    end
 ```
 
 ## Key Classes

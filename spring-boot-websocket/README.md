@@ -11,41 +11,24 @@ This module demonstrates WebSocket integration with Spring Boot and Pekko Actors
 
 ## Architecture
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    Spring Boot Application                   │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │              WebSocketConfig                          │   │
-│  │              @EnableWebSocket                         │   │
-│  └──────────────────────────────────────────────────────┘   │
-│                            │                                 │
-│                            ▼                                 │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │           ChatWebSocketHandler                        │   │
-│  │           TextWebSocketHandler                        │   │
-│  │                                                       │   │
-│  │  - afterConnectionEstablished()                       │   │
-│  │  - handleTextMessage()      ─────────────────────┐    │   │
-│  │  - afterConnectionClosed()                       │    │   │
-│  └──────────────────────────────────────────────────│────┘   │
-│                                                     │        │
-│                                                     ▼        │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │              Pekko ActorSystem                        │   │
-│  │  ┌────────────────────────────────────────────────┐  │   │
-│  │  │              ChatRoom Actor                     │  │   │
-│  │  │                                                 │  │   │
-│  │  │  Commands:                                      │  │   │
-│  │  │  - Join(sessionId, username, callback)          │  │   │
-│  │  │  - Leave(sessionId)                             │  │   │
-│  │  │  - SendMessage(sessionId, content)              │  │   │
-│  │  │  - GetUsers(replyTo)                            │  │   │
-│  │  └────────────────────────────────────────────────┘  │   │
-│  └──────────────────────────────────────────────────────┘   │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph SpringBoot[Spring Boot Application]
+        Config["WebSocketConfig<br/>@EnableWebSocket"]
+
+        subgraph Handler[ChatWebSocketHandler]
+            Methods["afterConnectionEstablished()<br/>handleTextMessage()<br/>afterConnectionClosed()"]
+        end
+
+        subgraph ActorSystem[Pekko ActorSystem]
+            subgraph ChatRoom[ChatRoom Actor]
+                Commands["Commands:<br/>Join, Leave<br/>SendMessage, GetUsers"]
+            end
+        end
+
+        Config --> Handler
+        Handler --> ActorSystem
+    end
 ```
 
 ## Running

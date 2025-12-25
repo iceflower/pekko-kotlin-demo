@@ -11,22 +11,21 @@ This module demonstrates WebSocket implementation using pure Pekko HTTP and Acto
 
 ## Architecture
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                    Pekko HTTP Server                    │
-├─────────────────────────────────────────────────────────┤
-│  WebSocket Handler                                      │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐     │
-│  │  User1 WS   │  │  User2 WS   │  │  User3 WS   │     │
-│  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘     │
-│         │                │                │             │
-│         └────────────────┼────────────────┘             │
-│                          ▼                              │
-│                  ┌───────────────┐                      │
-│                  │   ChatRoom    │                      │
-│                  │    Actor      │                      │
-│                  └───────────────┘                      │
-└─────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph PekkoHTTP[Pekko HTTP Server]
+        subgraph WebSocket[WebSocket Handler]
+            U1["User1 WS"]
+            U2["User2 WS"]
+            U3["User3 WS"]
+        end
+
+        CR["ChatRoom<br/>Actor"]
+
+        U1 --> CR
+        U2 --> CR
+        U3 --> CR
+    end
 ```
 
 ## Running

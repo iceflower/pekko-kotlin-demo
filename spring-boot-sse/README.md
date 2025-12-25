@@ -12,38 +12,23 @@ This module demonstrates Server-Sent Events (SSE) integration with Spring Boot a
 
 ## Architecture
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    Spring Boot Application                   │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │              SseController                            │   │
-│  │              @RestController                          │   │
-│  │                                                       │   │
-│  │  GET /api/events ──────────────────┐                  │   │
-│  │  POST /api/publish                 │                  │   │
-│  │  GET /api/stats                    │                  │   │
-│  └────────────────────────────────────│──────────────────┘   │
-│                                       │                      │
-│                                       ▼                      │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │              Pekko ActorSystem                        │   │
-│  │  ┌────────────────────────────────────────────────┐  │   │
-│  │  │           EventPublisher Actor                  │  │   │
-│  │  │                                                 │  │   │
-│  │  │  Commands:                                      │  │   │
-│  │  │  - Subscribe(subscriberId, callback)            │  │   │
-│  │  │  - Unsubscribe(subscriberId)                    │  │   │
-│  │  │  - Publish(eventType, data)                     │  │   │
-│  │  │  - GetStats(replyTo)                            │  │   │
-│  │  │                                                 │  │   │
-│  │  │  Timer:                                         │  │   │
-│  │  │  - Heartbeat every 30s                          │  │   │
-│  │  └────────────────────────────────────────────────┘  │   │
-│  └──────────────────────────────────────────────────────┘   │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph SpringBoot[Spring Boot Application]
+        subgraph Controller[SseController - @RestController]
+            GET1["GET /api/events"]
+            POST1["POST /api/publish"]
+            GET2["GET /api/stats"]
+        end
+
+        subgraph ActorSystem[Pekko ActorSystem]
+            subgraph EventPublisher[EventPublisher Actor]
+                Commands["Commands:<br/>Subscribe, Unsubscribe<br/>Publish, GetStats<br/><br/>Timer: Heartbeat every 30s"]
+            end
+        end
+
+        Controller --> ActorSystem
+    end
 ```
 
 ## Running

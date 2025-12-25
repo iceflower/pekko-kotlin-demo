@@ -12,57 +12,28 @@ This module demonstrates integration between Apache Pekko Actors and JetBrains E
 
 ## Architecture
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    Pekko ActorSystem                        │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  ┌───────────────────────────────────────────────────────┐  │
-│  │                    TaskActor                          │  │
-│  │                                                       │  │
-│  │  Commands:                                            │  │
-│  │  - CreateTask(title, description, replyTo)            │  │
-│  │  - GetTask(id, replyTo)                               │  │
-│  │  - GetAllTasks(replyTo)                               │  │
-│  │  - UpdateTask(id, title, desc, completed, replyTo)    │  │
-│  │  - ToggleTask(id, replyTo)                            │  │
-│  │  - DeleteTask(id, replyTo)                            │  │
-│  │  - GetStats(replyTo)                                  │  │
-│  │                                                       │  │
-│  │  Internal: DbResult, DbError (async callback)         │  │
-│  └───────────────────────┬───────────────────────────────┘  │
-│                          │                                  │
-│                          ▼                                  │
-│  ┌───────────────────────────────────────────────────────┐  │
-│  │               Dedicated DB ThreadPool                 │  │
-│  │               (CompletableFuture)                     │  │
-│  └───────────────────────┬───────────────────────────────┘  │
-│                          │                                  │
-└──────────────────────────┼──────────────────────────────────┘
-                           │
-                           ▼
-┌─────────────────────────────────────────────────────────────┐
-│                    TaskRepository                           │
-│                    (Exposed DSL)                            │
-├─────────────────────────────────────────────────────────────┤
-│  - create(title, description): Task                         │
-│  - findById(id): Task?                                      │
-│  - findAll(): List<Task>                                    │
-│  - update(id, title, desc, completed): Task?                │
-│  - toggleCompleted(id): Task?                               │
-│  - delete(id): Boolean                                      │
-│  - count(): Long                                            │
-│  - countCompleted(): Long                                   │
-└───────────────────────────┬─────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│                      HikariCP                               │
-│                   Connection Pool                           │
-├─────────────────────────────────────────────────────────────┤
-│                    H2 Database                              │
-│                   (In-Memory)                               │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph ActorSystem[Pekko ActorSystem]
+        subgraph TaskActor[TaskActor]
+            Commands["Commands:<br/>CreateTask, GetTask, GetAllTasks<br/>UpdateTask, ToggleTask, DeleteTask, GetStats<br/><br/>Internal: DbResult, DbError"]
+        end
+
+        ThreadPool["Dedicated DB ThreadPool<br/>(CompletableFuture)"]
+
+        TaskActor --> ThreadPool
+    end
+
+    subgraph Repository[TaskRepository - Exposed DSL]
+        Methods["create, findById, findAll<br/>update, toggleCompleted, delete<br/>count, countCompleted"]
+    end
+
+    subgraph Database[HikariCP Connection Pool]
+        H2["H2 Database<br/>(In-Memory)"]
+    end
+
+    ThreadPool --> Repository
+    Repository --> Database
 ```
 
 ## Running
