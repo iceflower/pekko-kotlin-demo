@@ -1,0 +1,34 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: spring-boot-optional-cluster
+
+# Pekko configuration
+pekko:
+  cluster:
+    # Set to true to enable cluster mode, false for standalone
+    enabled: false
+    # Cluster communication settings (only used when enabled=true)
+    hostname: 127.0.0.1
+    port: 25520
+    seed-nodes:
+      - "pekko://optional-cluster-system@127.0.0.1:25520"
+
+logging:
+  level:
+    root: INFO
+    org.apache.pekko: INFO
+    com.example.pekko: DEBUG
+
+---
+# Profile for cluster mode
+spring:
+  config:
+    activate:
+      on-profile: cluster
+
+pekko:
+  cluster:
+    enabled: true
