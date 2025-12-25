@@ -1,28 +1,23 @@
 package com.example.pekko
 
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.shouldBe
 import org.apache.pekko.actor.testkit.typed.javadsl.ActorTestKit
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
 
 /**
- * HelloWorld Actor 테스트
+ * HelloWorld Actor 테스트 (Kotest)
  *
  * Pekko TestKit을 사용한 Actor 단위 테스트 예제입니다.
  */
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class HelloWorldActorTest {
+class HelloWorldActorTest : FunSpec({
 
-    private val testKit = ActorTestKit.create()
+    val testKit = ActorTestKit.create()
 
-    @AfterAll
-    fun cleanup() {
+    afterSpec {
         testKit.shutdownTestKit()
     }
 
-    @Test
-    fun `HelloWorld Actor가 인사에 응답해야 한다`() {
+    test("HelloWorld Actor가 인사에 응답해야 한다") {
         // Given: HelloWorld Actor 생성
         val helloWorld = testKit.spawn(HelloWorldActor.create())
 
@@ -34,11 +29,10 @@ class HelloWorldActorTest {
 
         // Then: 응답 확인
         val response = probe.receiveMessage()
-        assertEquals("테스터", response.name)
+        response.name shouldBe "테스터"
     }
 
-    @Test
-    fun `HelloWorld Actor가 여러 번 인사해도 정상 동작해야 한다`() {
+    test("HelloWorld Actor가 여러 번 인사해도 정상 동작해야 한다") {
         val helloWorld = testKit.spawn(HelloWorldActor.create())
         val probe = testKit.createTestProbe<HelloWorldActor.Greeted>()
 
@@ -46,7 +40,7 @@ class HelloWorldActorTest {
         for (i in 0..2) {
             helloWorld.tell(HelloWorldActor.Greet("사용자$i", probe.ref()))
             val response = probe.receiveMessage()
-            assertEquals("사용자$i", response.name)
+            response.name shouldBe "사용자$i"
         }
     }
-}
+})

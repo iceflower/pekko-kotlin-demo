@@ -17,12 +17,17 @@ allprojects {
 subprojects {
     apply(plugin = "org.jetbrains.kotlin.jvm")
 
+    val kotestVersion = "5.9.1"
+
     dependencies {
         "implementation"(platform("org.apache.pekko:pekko-bom_${rootProject.extra["scalaBinaryVersion"]}:${rootProject.extra["pekkoVersion"]}"))
         "implementation"(kotlin("stdlib"))
 
         "testImplementation"(kotlin("test"))
-        "testImplementation"("org.junit.jupiter:junit-jupiter:5.10.1")
+        // Kotest
+        "testImplementation"("io.kotest:kotest-runner-junit5:$kotestVersion")
+        "testImplementation"("io.kotest:kotest-assertions-core:$kotestVersion")
+        "testImplementation"("io.kotest:kotest-property:$kotestVersion")
     }
 
     tasks.withType<Test> {

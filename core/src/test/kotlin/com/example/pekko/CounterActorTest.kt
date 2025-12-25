@@ -1,37 +1,31 @@
 package com.example.pekko
 
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.shouldBe
 import org.apache.pekko.actor.testkit.typed.javadsl.ActorTestKit
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
 
 /**
- * Counter Actor 테스트
+ * Counter Actor 테스트 (Kotest)
  */
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class CounterActorTest {
+class CounterActorTest : FunSpec({
 
-    private val testKit = ActorTestKit.create()
+    val testKit = ActorTestKit.create()
 
-    @AfterAll
-    fun cleanup() {
+    afterSpec {
         testKit.shutdownTestKit()
     }
 
-    @Test
-    fun `Counter는 초기값이 0이어야 한다`() {
+    test("Counter는 초기값이 0이어야 한다") {
         val counter = testKit.spawn(CounterActor.create())
         val probe = testKit.createTestProbe<CounterActor.Value>()
 
         counter.tell(CounterActor.GetValue(probe.ref()))
 
         val response = probe.receiveMessage()
-        assertEquals(0, response.count)
+        response.count shouldBe 0
     }
 
-    @Test
-    fun `Increment는 카운터를 증가시켜야 한다`() {
+    test("Increment는 카운터를 증가시켜야 한다") {
         val counter = testKit.spawn(CounterActor.create())
         val probe = testKit.createTestProbe<CounterActor.Value>()
 
@@ -40,11 +34,10 @@ class CounterActorTest {
         counter.tell(CounterActor.GetValue(probe.ref()))
 
         val response = probe.receiveMessage()
-        assertEquals(2, response.count)
+        response.count shouldBe 2
     }
 
-    @Test
-    fun `Decrement는 카운터를 감소시켜야 한다`() {
+    test("Decrement는 카운터를 감소시켜야 한다") {
         val counter = testKit.spawn(CounterActor.create())
         val probe = testKit.createTestProbe<CounterActor.Value>()
 
@@ -54,6 +47,6 @@ class CounterActorTest {
         counter.tell(CounterActor.GetValue(probe.ref()))
 
         val response = probe.receiveMessage()
-        assertEquals(1, response.count)
+        response.count shouldBe 1
     }
-}
+})
