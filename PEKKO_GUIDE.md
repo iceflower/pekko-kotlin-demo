@@ -296,11 +296,11 @@ pekko {
 
 ### 주요 설정 항목
 
-| 설정                       | 설명                               |
-|--------------------------|----------------------------------|
-| `loglevel`               | 로깅 레벨 (DEBUG, INFO, WARN, ERROR) |
-| `throughput`             | 디스패처가 한 번에 처리할 메시지 수             |
-| `serialization-bindings` | 직렬화 바인딩 (클러스터/리모트용)              |
+| 설정                       | 설명                                |
+|--------------------------|-----------------------------------|
+| `loglevel`               | 로깅 레벨 (DEBUG, INFO, WARN, ERROR)  |
+| `throughput`             | 디스패처가 한 번에 처리할 메시지 수              |
+| `serialization-bindings` | 직렬화 바인딩 (클러스터/리모트용)               |
 
 ---
 
@@ -333,29 +333,29 @@ class CounterActorTest : FunSpec({
 
 ### Kotest 스타일
 
-| 스타일                       | 설명                       |
-|---------------------------|--------------------------|
-| `FunSpec`                 | 간단한 `test("...") { }` 블록 |
-| `shouldBe`                | Kotest 매처로 값 검증          |
-| `shouldBeInstanceOf<T>()` | 타입 검증 및 스마트 캐스트          |
+| 스타일                       | 설명                        |
+|---------------------------|---------------------------|
+| `FunSpec`                 | 간단한 `test("...") { }` 블록  |
+| `shouldBe`                | Kotest 매처로 값 검증           |
+| `shouldBeInstanceOf<T>()` | 타입 검증 및 스마트 캐스트           |
 
 ### TestProbe
 
-| 메서드                         | 설명        |
-|-----------------------------|-----------|
-| `receiveMessage()`          | 메시지 수신 대기 |
-| `expectMessage(msg)`        | 특정 메시지 기대 |
-| `expectNoMessage(duration)` | 메시지 없음 확인 |
+| 메서드                         | 설명         |
+|-----------------------------|------------|
+| `receiveMessage()`          | 메시지 수신 대기  |
+| `expectMessage(msg)`        | 특정 메시지 기대  |
+| `expectNoMessage(duration)` | 메시지 없음 확인  |
 
 ---
 
 ## Akka에서 마이그레이션
 
-| Akka                       | Pekko                          |
-|----------------------------|--------------------------------|
-| `akka.actor.typed`         | `org.apache.pekko.actor.typed` |
-| `com.typesafe.akka:akka-*` | `org.apache.pekko:pekko-*`     |
-| `akka { }` (설정)            | `pekko { }`                    |
+| Akka                       | Pekko                           |
+|----------------------------|---------------------------------|
+| `akka.actor.typed`         | `org.apache.pekko.actor.typed`  |
+| `com.typesafe.akka:akka-*` | `org.apache.pekko:pekko-*`      |
+| `akka { }` (설정)            | `pekko { }`                     |
 
 패키지명과 설정 키만 변경하면 대부분 호환됩니다.
 
@@ -374,8 +374,25 @@ class CounterActorTest : FunSpec({
 
 각 기능의 심화 내용은 모듈별 README를 참고하세요:
 
+### 기본 모듈
+- [core/README.md](./core/README.md) - Actor 기본, Streams, Ask 패턴
 - [cluster/README.md](./cluster/README.md) - 클러스터링, Split Brain Resolver
 - [persistence/README.md](./persistence/README.md) - 이벤트 소싱, 스냅샷
 - [http/README.md](./http/README.md) - REST API, Routing DSL
 - [grpc/README.md](./grpc/README.md) - gRPC, Protocol Buffers
-- [spring-boot/README.md](./spring-boot/README.md) - Spring Boot 통합
+- [exposed/README.md](./exposed/README.md) - Exposed ORM + Actor 통합
+
+### 실시간 통신 (Pure Pekko)
+- [websocket/README.md](./websocket/README.md) - WebSocket 채팅
+- [sse/README.md](./sse/README.md) - Server-Sent Events
+- [websocket-cluster/README.md](./websocket-cluster/README.md) - WebSocket 클러스터
+- [sse-cluster/README.md](./sse-cluster/README.md) - SSE 클러스터
+
+### Spring Boot 통합
+- [spring-boot/README.md](./spring-boot/README.md) - Spring Boot 기본 통합
+- [spring-boot-cluster/README.md](./spring-boot-cluster/README.md) - Spring Boot + Pekko Cluster
+- [spring-boot-optional-cluster/README.md](./spring-boot-optional-cluster/README.md) - 선택적 클러스터 모드
+- [spring-boot-websocket/README.md](./spring-boot-websocket/README.md) - Spring Boot WebSocket
+- [spring-boot-sse/README.md](./spring-boot-sse/README.md) - Spring Boot SSE
+- [spring-boot-websocket-cluster/README.md](./spring-boot-websocket-cluster/README.md) - Spring Boot WebSocket 클러스터
+- [spring-boot-sse-cluster/README.md](./spring-boot-sse-cluster/README.md) - Spring Boot SSE 클러스터
