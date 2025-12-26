@@ -27,6 +27,17 @@ subprojects {
 
     tasks.withType<Test> {
         useJUnitPlatform()
+
+        // Windows 한글 경로 문제 해결
+        jvmArgs(
+            "-Dfile.encoding=UTF-8",
+            "-Djava.io.tmpdir=C:/Temp",
+            "-Duser.home=C:/gradle-home"
+        )
+
+        // 테스트 실행 환경 설정
+        environment("TEMP", "C:\\Temp")
+        environment("TMP", "C:\\Temp")
     }
 
     tasks.withType<JavaCompile> {
