@@ -1,16 +1,16 @@
-# Spring Boot SSE Module
+# Spring Boot SSE 모듈
 
-This module demonstrates Server-Sent Events (SSE) integration with Spring Boot and Pekko Actors.
+이 모듈은 Spring Boot와 Pekko Actor를 사용한 Server-Sent Events (SSE) 통합을 보여줍니다.
 
-## Features
+## 기능
 
-- **Spring WebFlux SSE**: Reactive event streaming
-- **Pekko Actor Integration**: EventPublisher actor manages subscriptions
-- **Multiple Event Types**: Support for different event categories
-- **Heartbeat**: Automatic keep-alive every 30 seconds
-- **Statistics Endpoint**: Monitor subscriber count and event totals
+- **Spring WebFlux SSE**: 리액티브 이벤트 스트리밍
+- **Pekko Actor 통합**: EventPublisher Actor가 구독 관리
+- **다양한 이벤트 타입**: 여러 이벤트 카테고리 지원
+- **하트비트**: 30초마다 자동 Keep-alive
+- **통계 엔드포인트**: 구독자 수 및 이벤트 총계 모니터링
 
-## Architecture
+## 아키텍처
 
 ```mermaid
 flowchart TB
@@ -23,7 +23,7 @@ flowchart TB
 
         subgraph ActorSystem[Pekko ActorSystem]
             subgraph EventPublisher[EventPublisher Actor]
-                Commands["Commands:<br/>Subscribe, Unsubscribe<br/>Publish, GetStats<br/><br/>Timer: Heartbeat every 30s"]
+                Commands["Commands:<br/>Subscribe, Unsubscribe<br/>Publish, GetStats<br/><br/>Timer: 30초마다 Heartbeat"]
             end
         end
 
@@ -31,29 +31,31 @@ flowchart TB
     end
 ```
 
-## Running
+## 실행 방법
 
 ```bash
 ./gradlew :spring-boot-sse:bootRun
 ```
 
-Server starts at:
+서버 시작 위치:
+
 - HTTP: http://localhost:8083/
 - SSE: http://localhost:8083/api/events
 
 ## API
 
-### SSE Endpoint
+### SSE 엔드포인트
 
 **GET /api/events**
 
-Connect to receive server-sent events.
+서버 전송 이벤트를 수신하기 위해 연결합니다.
 
 ```bash
 curl -N http://localhost:8083/api/events
 ```
 
-Event format:
+이벤트 형식:
+
 ```
 id: <uuid>
 event: <event-type>
@@ -63,13 +65,13 @@ data: {"data": "<payload>", "timestamp": 1703123456789}
 
 ### REST API
 
-| Method | Endpoint                        | Description                    |
-|--------|---------------------------------|--------------------------------|
-| GET    | `/api/events`                   | SSE event stream               |
-| POST   | `/api/publish?type=<eventType>` | Publish an event (body = data) |
-| GET    | `/api/stats`                    | Get publisher statistics       |
+| Method | Endpoint                        | 설명                     |
+|--------|---------------------------------|------------------------|
+| GET    | `/api/events`                   | SSE 이벤트 스트림            |
+| POST   | `/api/publish?type=<eventType>` | 이벤트 발행 (body = data)   |
+| GET    | `/api/stats`                    | 발행자 통계 조회              |
 
-### Publish Event
+### 이벤트 발행
 
 ```bash
 curl -X POST "http://localhost:8083/api/publish?type=notification" \
@@ -77,13 +79,14 @@ curl -X POST "http://localhost:8083/api/publish?type=notification" \
   -d "Hello, SSE!"
 ```
 
-### Get Stats
+### 통계 조회
 
 ```bash
 curl http://localhost:8083/api/stats
 ```
 
-Response:
+응답:
+
 ```json
 {
   "subscriberCount": 3,
@@ -91,57 +94,58 @@ Response:
 }
 ```
 
-## Event Types
+## 이벤트 타입
 
-| Type           | Description                      |
-|----------------|----------------------------------|
-| `connected`    | Sent on initial connection       |
-| `notification` | General notifications            |
-| `alert`        | Important alerts                 |
-| `update`       | Data updates                     |
-| `heartbeat`    | Keep-alive (automatic every 30s) |
+| 타입             | 설명                    |
+|----------------|-----------------------|
+| `connected`    | 초기 연결 시 전송            |
+| `notification` | 일반 알림                 |
+| `alert`        | 중요 알림                 |
+| `update`       | 데이터 업데이트              |
+| `heartbeat`    | Keep-alive (30초마다 자동) |
 
-## Testing
+## 테스트
 
 ```bash
 ./gradlew :spring-boot-sse:test
 ```
 
-## Testing with Browser
+## 브라우저로 테스트
 
-Open http://localhost:8083/ in your browser to use the built-in SSE demo UI.
+http://localhost:8083/ 에서 내장 SSE 데모 UI를 사용할 수 있습니다.
 
-## Testing with curl
+## curl로 테스트
 
 ```bash
-# Subscribe to events (runs until Ctrl+C)
+# 이벤트 구독 (Ctrl+C까지 실행)
 curl -N http://localhost:8083/api/events
 
-# In another terminal, publish events
+# 다른 터미널에서 이벤트 발행
 curl -X POST "http://localhost:8083/api/publish?type=notification" -d "Test message"
 ```
 
-## Integration Points
+## 통합 포인트
 
-### Pekko Actor with Spring WebFlux
+### Pekko Actor와 Spring WebFlux
 
-The integration uses Reactor's `Sinks` to bridge:
-1. Pekko actor callbacks → Reactive stream emissions
-2. SSE subscription → Actor Subscribe command
-3. SSE disconnect → Actor Unsubscribe command
+Reactor의 `Sinks`를 사용하여 연동:
 
-### Key Classes
+1. Pekko Actor 콜백 → 리액티브 스트림 emission
+2. SSE 구독 → Actor Subscribe 커맨드
+3. SSE 연결 해제 → Actor Unsubscribe 커맨드
 
-- **PekkoConfig**: Creates ActorSystem and EventPublisher as Spring Beans
-- **SseController**: WebFlux SSE endpoints
-- **EventPublisher**: Actor managing pub/sub and heartbeat
+### 주요 클래스
 
-## Comparison with Pure Pekko Module
+- **PekkoConfig**: ActorSystem과 EventPublisher를 Spring Bean으로 생성
+- **SseController**: WebFlux SSE 엔드포인트
+- **EventPublisher**: pub/sub과 하트비트를 관리하는 Actor
 
-| Feature      | Spring Boot          | Pure Pekko              |
-|--------------|----------------------|-------------------------|
-| Framework    | Spring WebFlux       | Pekko HTTP              |
-| SSE Format   | ServerSentEvent<T>   | Source<ServerSentEvent> |
-| Reactive     | Project Reactor      | Pekko Streams           |
-| Dependencies | Spring ecosystem     | Minimal                 |
-| Use Case     | Enterprise apps      | Microservices           |
+## Pure Pekko 모듈과의 비교
+
+| 기능       | Spring Boot          | Pure Pekko              |
+|----------|----------------------|-------------------------|
+| 프레임워크    | Spring WebFlux       | Pekko HTTP              |
+| SSE 형식   | ServerSentEvent<T>   | Source<ServerSentEvent> |
+| 리액티브     | Project Reactor      | Pekko Streams           |
+| 의존성      | Spring 생태계           | 최소                      |
+| 사용 사례    | 엔터프라이즈 앱             | 마이크로서비스                 |

@@ -1,15 +1,15 @@
-# WebSocket Module (Pure Pekko HTTP)
+# WebSocket 모듈 (Pure Pekko HTTP)
 
-This module demonstrates WebSocket implementation using pure Pekko HTTP and Actors.
+이 모듈은 순수 Pekko HTTP와 Actor를 사용한 WebSocket 구현을 보여줍니다.
 
-## Features
+## 기능
 
-- **Chat Room**: Real-time chat using WebSocket
-- **Actor-based Session Management**: Each user session is managed via actor messaging
-- **Message Broadcasting**: Messages are broadcast to all connected users
-- **User Presence**: Join/leave notifications
+- **채팅방**: WebSocket을 사용한 실시간 채팅
+- **Actor 기반 세션 관리**: Actor 메시징을 통한 사용자 세션 관리
+- **메시지 브로드캐스트**: 연결된 모든 사용자에게 메시지 전송
+- **사용자 접속 상태**: 입장/퇴장 알림
 
-## Architecture
+## 아키텍처
 
 ```mermaid
 flowchart TB
@@ -28,55 +28,57 @@ flowchart TB
     end
 ```
 
-## Running
+## 실행 방법
 
 ```bash
 ./gradlew :websocket:run
 ```
 
-Server starts at:
+서버 시작 위치:
+
 - HTTP: http://localhost:8080/
 - WebSocket: ws://localhost:8080/ws/chat?username=<name>
 
 ## API
 
-### WebSocket Endpoint
+### WebSocket 엔드포인트
 
-Connect to `ws://localhost:8080/ws/chat?username=<name>`
+`ws://localhost:8080/ws/chat?username=<name>` 으로 연결
 
-**Incoming Messages** (from server):
+**수신 메시지** (서버에서):
+
 ```json
-// Chat message
-{"type":"chat","username":"alice","message":"Hello!","timestamp":1703123456789}
+// 채팅 메시지
+{"type":"chat","username":"alice","message":"안녕하세요!","timestamp":1703123456789}
 
-// System message
-{"type":"system","message":"bob joined the chat","timestamp":1703123456789}
+// 시스템 메시지
+{"type":"system","message":"bob님이 채팅에 참여했습니다","timestamp":1703123456789}
 
-// User list
+// 사용자 목록
 {"type":"users","users":["alice","bob"]}
 ```
 
-**Outgoing Messages** (to server):
-Plain text messages are sent as-is.
+**송신 메시지** (서버로):
+일반 텍스트 메시지를 그대로 전송합니다.
 
 ### REST API
 
-| Method | Endpoint     | Description              |
-|--------|--------------|--------------------------|
-| GET    | `/api/users` | Get list of online users |
+| Method | Endpoint     | 설명            |
+|--------|--------------|---------------|
+| GET    | `/api/users` | 온라인 사용자 목록 조회 |
 
-## Testing with wscat
+## wscat으로 테스트
 
 ```bash
-# Install wscat
+# wscat 설치
 npm install -g wscat
 
-# Connect as user
+# 사용자로 연결
 wscat -c "ws://localhost:8080/ws/chat?username=alice"
 
-# Send messages by typing and pressing Enter
+# 메시지를 입력하고 Enter를 눌러 전송
 ```
 
-## Testing with Browser
+## 브라우저로 테스트
 
-Open http://localhost:8080/ in your browser to use the built-in chat UI.
+http://localhost:8080/ 에서 내장 채팅 UI를 사용할 수 있습니다.

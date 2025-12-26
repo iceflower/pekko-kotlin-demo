@@ -6,14 +6,14 @@ Pekko Actor의 기본 개념을 학습하기 위한 예제 모음입니다.
 
 ## 예제 목록
 
-| 파일                     | 설명                            |
-|------------------------|-------------------------------|
+| 파일                     | 설명                              |
+|------------------------|---------------------------------|
 | `HelloWorldActor.kt`   | 클래스 기반 Actor (AbstractBehavior) |
-| `HelloWorldBot.kt`     | 응답을 처리하는 Bot Actor             |
-| `CounterActor.kt`      | 함수형 Actor (Behaviors.receive)  |
-| `AskPatternExample.kt` | Ask 패턴 (요청-응답)                 |
-| `StreamExample.kt`     | Pekko Streams 기본               |
-| `MainActor.kt`         | Guardian Actor                 |
+| `HelloWorldBot.kt`     | 응답을 처리하는 Bot Actor              |
+| `CounterActor.kt`      | 함수형 Actor (Behaviors.receive)   |
+| `AskPatternExample.kt` | Ask 패턴 (요청-응답)                  |
+| `StreamExample.kt`     | Pekko Streams 기본                |
+| `MainActor.kt`         | Guardian Actor                  |
 
 ## 실행
 

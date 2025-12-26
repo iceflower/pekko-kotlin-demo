@@ -103,3 +103,4 @@ flowchart TB
 
 ### 메시지 전송
 WebSocket으로 텍스트 메시지를 그대로 전송하면 됩니다.
+

@@ -95,13 +95,13 @@ PEKKO_REMOTE_PORT=25522 SERVER_PORT=8085 ./gradlew :spring-boot-cluster:bootRun
 
 ## API 엔드포인트
 
-| Method | Endpoint | 설명 |
-|--------|----------|------|
-| GET | `/api/cluster/status` | 클러스터 상태 조회 |
-| GET | `/api/cluster/counter` | 카운터 값 조회 |
-| POST | `/api/cluster/counter/increment` | 카운터 증가 |
-| POST | `/api/cluster/counter/decrement` | 카운터 감소 |
-| POST | `/api/cluster/counter/reset` | 카운터 리셋 |
+| Method | Endpoint                         | 설명                 |
+|--------|----------------------------------|--------------------|
+| GET    | `/api/cluster/status`            | 클러스터 상태 조회         |
+| GET    | `/api/cluster/counter`           | 카운터 값 조회           |
+| POST   | `/api/cluster/counter/increment` | 카운터 증가             |
+| POST   | `/api/cluster/counter/decrement` | 카운터 감소             |
+| POST   | `/api/cluster/counter/reset`     | 카운터 리셋             |
 
 ## API 사용 예시
 

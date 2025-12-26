@@ -103,3 +103,4 @@ data: {"data":"{\"message\":\"Hello!\"}","nodeAddress":"pekko://SseClusterSystem
 - **노드 정보 포함**: 각 이벤트에 발행 노드 정보 포함
 - **자동 재연결**: 클라이언트 HTML에서 SSE 연결 끊김 시 자동 재연결
 - **실시간 통계**: 구독자 수, 노드 정보 실시간 조회 가능
+

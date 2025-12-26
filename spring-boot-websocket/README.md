@@ -1,15 +1,15 @@
-# Spring Boot WebSocket Module
+# Spring Boot WebSocket 모듈
 
-This module demonstrates WebSocket integration with Spring Boot and Pekko Actors.
+이 모듈은 Spring Boot와 Pekko Actor를 사용한 WebSocket 통합을 보여줍니다.
 
-## Features
+## 기능
 
-- **Spring WebSocket**: Native Spring WebSocket support
-- **Pekko Actor Integration**: ChatRoom actor manages chat state
-- **Real-time Chat**: Bidirectional WebSocket communication
-- **JSON Messages**: Structured message protocol
+- **Spring WebSocket**: 네이티브 Spring WebSocket 지원
+- **Pekko Actor 통합**: ChatRoom Actor가 채팅 상태 관리
+- **실시간 채팅**: 양방향 WebSocket 통신
+- **JSON 메시지**: 구조화된 메시지 프로토콜
 
-## Architecture
+## 아키텍처
 
 ```mermaid
 flowchart TB
@@ -31,25 +31,27 @@ flowchart TB
     end
 ```
 
-## Running
+## 실행 방법
 
 ```bash
 ./gradlew :spring-boot-websocket:bootRun
 ```
 
-Server starts at:
+서버 시작 위치:
+
 - HTTP: http://localhost:8082/
 - WebSocket: ws://localhost:8082/ws/chat
 
 ## API
 
-### WebSocket Endpoint
+### WebSocket 엔드포인트
 
 **ws://localhost:8082/ws/chat**
 
-#### Client → Server Messages
+#### 클라이언트 → 서버 메시지
 
-**Join Chat**
+**채팅 참여**
+
 ```json
 {
   "type": "JOIN",
@@ -57,70 +59,76 @@ Server starts at:
 }
 ```
 
-**Send Message**
+**메시지 전송**
+
 ```json
 {
   "type": "MESSAGE",
-  "content": "Hello, everyone!"
+  "content": "안녕하세요!"
 }
 ```
 
-**Leave Chat**
+**채팅 나가기**
+
 ```json
 {
   "type": "LEAVE"
 }
 ```
 
-#### Server → Client Messages
+#### 서버 → 클라이언트 메시지
 
-**Chat Message**
+**채팅 메시지**
+
 ```json
 {
   "type": "CHAT",
   "username": "Alice",
-  "content": "Hello, everyone!",
+  "content": "안녕하세요!",
   "timestamp": 1703123456789
 }
 ```
 
-**System Message**
+**시스템 메시지**
+
 ```json
 {
   "type": "SYSTEM",
-  "content": "Alice joined the chat",
+  "content": "Alice님이 채팅에 참여했습니다",
   "timestamp": 1703123456789
 }
 ```
 
-## Testing
+## 테스트
 
 ```bash
 ./gradlew :spring-boot-websocket:test
 ```
 
-## Integration Points
+## 통합 포인트
 
-### Pekko Actor Lifecycle
+### Pekko Actor 생명주기
 
-The `PekkoConfig` class manages:
-1. ActorSystem creation with Spring lifecycle
-2. ChatRoom actor spawning as Spring Bean
-3. Graceful shutdown on application stop
+`PekkoConfig` 클래스가 관리:
 
-### Spring WebSocket Integration
+1. Spring 생명주기와 함께 ActorSystem 생성
+2. ChatRoom Actor를 Spring Bean으로 생성
+3. 애플리케이션 종료 시 정상 종료
 
-The `ChatWebSocketHandler` bridges:
-1. Spring WebSocket sessions → Pekko actor messages
-2. Actor callbacks → WebSocket text messages
-3. Session lifecycle → Actor Join/Leave commands
+### Spring WebSocket 통합
 
-## Comparison with Pure Pekko Module
+`ChatWebSocketHandler`가 연결:
 
-| Feature          | Spring Boot      | Pure Pekko     |
-|------------------|------------------|----------------|
-| Framework        | Spring WebSocket | Pekko HTTP     |
-| Configuration    | @EnableWebSocket | Routes DSL     |
-| Session Handling | Spring managed   | ActorSource    |
-| Dependencies     | Spring ecosystem | Minimal        |
-| Use Case         | Enterprise apps  | Microservices  |
+1. Spring WebSocket 세션 → Pekko Actor 메시지
+2. Actor 콜백 → WebSocket 텍스트 메시지
+3. 세션 생명주기 → Actor Join/Leave 커맨드
+
+## Pure Pekko 모듈과의 비교
+
+| 기능       | Spring Boot      | Pure Pekko   |
+|----------|------------------|--------------|
+| 프레임워크    | Spring WebSocket | Pekko HTTP   |
+| 설정       | @EnableWebSocket | Routes DSL   |
+| 세션 관리    | Spring 관리        | ActorSource  |
+| 의존성      | Spring 생태계       | 최소           |
+| 사용 사례    | 엔터프라이즈 앱         | 마이크로서비스      |

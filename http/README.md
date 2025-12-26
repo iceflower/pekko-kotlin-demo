@@ -208,15 +208,15 @@ class TaskRoutes(
 
 ### 주요 디렉티브
 
-| 디렉티브                               | 설명           |
-|------------------------------------|--------------|
-| `pathPrefix(segment)`              | URL 경로 접두사 매칭 |
-| `path(matcher)`                    | URL 경로 완전 매칭  |
-| `pathEnd`                          | 경로 끝 매칭       |
-| `get`, `post`, `put`, `delete`     | HTTP 메서드 매칭   |
-| `entity(unmarshaller)`             | 요청 본문 파싱      |
+| 디렉티브                                 | 설명            |
+|--------------------------------------|---------------|
+| `pathPrefix(segment)`                | URL 경로 접두사 매칭 |
+| `path(matcher)`                      | URL 경로 완전 매칭  |
+| `pathEnd`                            | 경로 끝 매칭       |
+| `get`, `post`, `put`, `delete`       | HTTP 메서드 매칭   |
+| `entity(unmarshaller)`               | 요청 본문 파싱      |
 | `complete(status, body, marshaller)` | 응답 반환         |
-| `onSuccess(future)`                | 비동기 결과 처리     |
+| `onSuccess(future)`                  | 비동기 결과 처리     |
 
 ### 경로 매처
 
