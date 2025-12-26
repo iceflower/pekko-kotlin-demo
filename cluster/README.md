@@ -217,6 +217,236 @@ flowchart TB
 
 ---
 
+## Kubernetes 배포
+
+Kubernetes 환경에서는 정적 seed-nodes 대신 **Pekko Cluster Bootstrap**을 사용하여 동적으로 클러스터를 구성합니다.
+
+### 아키텍처
+
+```mermaid
+flowchart TB
+    subgraph K8s[Kubernetes Cluster]
+        subgraph NS[Namespace]
+            subgraph Pods[Deployment: pekko-cluster]
+                P1[Pod 1<br/>10.0.0.1:2551]
+                P2[Pod 2<br/>10.0.0.2:2551]
+                P3[Pod 3<br/>10.0.0.3:2551]
+            end
+
+            HS[Headless Service<br/>clusterIP: None]
+            SVC[LoadBalancer Service]
+            SA[ServiceAccount]
+        end
+
+        API[Kubernetes API]
+
+        P1 <-->|Pekko Remoting| P2
+        P2 <-->|Pekko Remoting| P3
+        P1 <-->|Pekko Remoting| P3
+        Pods -->|Pod Discovery| API
+        SA -->|RBAC| API
+    end
+
+    Client[External Client] --> SVC
+    SVC --> Pods
+```
+
+### 추가 의존성
+
+```kotlin
+dependencies {
+    // 기존 의존성...
+    implementation("org.apache.pekko:pekko-management_2.13:1.0.0")
+    implementation("org.apache.pekko:pekko-management-cluster-bootstrap_2.13:1.0.0")
+    implementation("org.apache.pekko:pekko-discovery-kubernetes-api_2.13:1.0.0")
+}
+```
+
+### application.conf (Kubernetes용)
+
+```hocon
+pekko {
+  actor {
+    provider = cluster
+    serialization-bindings {
+      "com.example.pekko.cluster.CborSerializable" = jackson-cbor
+    }
+  }
+
+  remote.artery {
+    canonical {
+      hostname = ${?POD_IP}
+      port = 2551
+    }
+  }
+
+  cluster {
+    # seed-nodes 제거 - Bootstrap이 자동 처리
+    downing-provider-class = "org.apache.pekko.cluster.sbr.SplitBrainResolverProvider"
+    split-brain-resolver {
+      active-strategy = "keep-majority"
+      stable-after = 20s
+    }
+  }
+
+  management {
+    http {
+      hostname = ${?POD_IP}
+      port = 8558
+      bind-hostname = "0.0.0.0"
+    }
+    cluster.bootstrap {
+      contact-point-discovery {
+        discovery-method = kubernetes-api
+        service-name = "pekko-cluster"
+        required-contact-point-nr = 2
+      }
+    }
+  }
+
+  discovery {
+    method = kubernetes-api
+    kubernetes-api {
+      pod-namespace = ${?POD_NAMESPACE}
+      pod-label-selector = "app=pekko-cluster"
+    }
+  }
+}
+```
+
+### Kubernetes 매니페스트
+
+#### Deployment
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pekko-cluster
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: pekko-cluster
+  template:
+    metadata:
+      labels:
+        app: pekko-cluster
+    spec:
+      serviceAccountName: pekko-cluster
+      containers:
+        - name: pekko-cluster
+          image: your-registry/pekko-cluster:latest
+          ports:
+            - name: remoting
+              containerPort: 2551
+            - name: management
+              containerPort: 8558
+          env:
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: management
+            initialDelaySeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /alive
+              port: management
+            initialDelaySeconds: 20
+```
+
+#### Headless Service
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: pekko-cluster
+spec:
+  clusterIP: None  # Headless
+  selector:
+    app: pekko-cluster
+  ports:
+    - name: remoting
+      port: 2551
+    - name: management
+      port: 8558
+```
+
+#### RBAC
+
+```yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: pekko-cluster
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: pekko-cluster-role
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "watch", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: pekko-cluster-binding
+subjects:
+  - kind: ServiceAccount
+    name: pekko-cluster
+roleRef:
+  kind: Role
+  name: pekko-cluster-role
+  apiGroup: rbac.authorization.k8s.io
+```
+
+### 애플리케이션 코드 수정
+
+```kotlin
+fun main() {
+    val system = ActorSystem.create(rootBehavior(), "ClusterSystem")
+
+    // Cluster Bootstrap 시작
+    PekkoManagement.get(system).start()
+    ClusterBootstrap.get(system).start()
+}
+```
+
+### 주요 개념
+
+| 개념                    | 설명                                        |
+|-----------------------|-------------------------------------------|
+| **Cluster Bootstrap** | Kubernetes API로 Pod를 발견하여 자동 클러스터 형성      |
+| **Headless Service**  | `clusterIP: None`으로 Pod 직접 DNS 레코드 생성     |
+| **Pekko Management**  | 헬스체크 엔드포인트 제공 (`/ready`, `/alive`)        |
+| **RBAC**              | Pod 목록 조회 권한 필요 (`get`, `list`, `watch`) |
+
+### 배포 명령어
+
+```bash
+# 리소스 배포
+kubectl apply -f k8s/
+
+# 클러스터 상태 확인
+kubectl logs -l app=pekko-cluster --tail=100
+
+# 스케일링
+kubectl scale deployment pekko-cluster --replicas=5
+```
+
+---
+
 ## 의존성
 
 ```kotlin
