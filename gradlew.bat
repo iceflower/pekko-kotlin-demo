@@ -26,6 +26,9 @@
 @rem Set local scope for the variables with windows NT shell
 if "%OS%"=="Windows_NT" setlocal
 
+@rem Set GRADLE_USER_HOME to avoid Korean character path issues with protoc plugin
+if not defined GRADLE_USER_HOME set GRADLE_USER_HOME=C:\gradle-home
+
 set DIRNAME=%~dp0
 if "%DIRNAME%"=="" set DIRNAME=.
 @rem This is normally unused

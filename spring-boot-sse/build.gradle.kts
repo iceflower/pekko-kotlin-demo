@@ -1,31 +1,29 @@
 plugins {
-    id("org.springframework.boot") version "4.0.1"
-    id("io.spring.dependency-management") version "1.1.7"
-    kotlin("plugin.spring") version "2.3.0"
+    alias(libs.plugins.spring.boot)
+    alias(libs.plugins.spring.dependency.management)
+    alias(libs.plugins.kotlin.spring)
 }
-
-val scalaBinaryVersion: String by rootProject.extra
 
 dependencies {
     // Spring Boot
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter-webflux")
+    implementation(libs.spring.boot.starter.web)
+    implementation(libs.spring.boot.starter.webflux)
 
     // Pekko
-    implementation("org.apache.pekko:pekko-actor-typed_$scalaBinaryVersion")
-    implementation("org.apache.pekko:pekko-slf4j_$scalaBinaryVersion")
+    implementation(libs.pekko.actor.typed)
+    implementation(libs.pekko.slf4j)
 
     // Kotlin
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation(libs.kotlin.reflect)
+    implementation(libs.jackson.module.kotlin)
 
     // Logging
     implementation("ch.qos.logback:logback-classic")
 
     // Test
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.apache.pekko:pekko-actor-testkit-typed_$scalaBinaryVersion")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+    testImplementation(libs.spring.boot.starter.test)
+    testImplementation(libs.pekko.actor.testkit.typed)
+    testImplementation(libs.kotlin.test.junit5)
 }
 
 tasks.withType<Test> {

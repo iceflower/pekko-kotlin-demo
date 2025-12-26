@@ -1,9 +1,6 @@
 plugins {
-    kotlin("jvm") version "2.3.0" apply false
+    alias(libs.plugins.kotlin.jvm) apply false
 }
-
-val scalaBinaryVersion by extra("2.13")
-val pekkoVersion by extra("1.4.0")
 
 allprojects {
     group = "com.example"
@@ -17,17 +14,15 @@ allprojects {
 subprojects {
     apply(plugin = "org.jetbrains.kotlin.jvm")
 
-    val kotestVersion = "6.0.5"
-
     dependencies {
-        "implementation"(platform("org.apache.pekko:pekko-bom_${rootProject.extra["scalaBinaryVersion"]}:${rootProject.extra["pekkoVersion"]}"))
-        "implementation"(kotlin("stdlib"))
+        "implementation"(platform(rootProject.libs.pekko.bom))
+        "implementation"(rootProject.libs.kotlin.stdlib)
 
-        "testImplementation"(kotlin("test"))
+        "testImplementation"(rootProject.libs.kotlin.test)
         // Kotest
-        "testImplementation"("io.kotest:kotest-runner-junit5:$kotestVersion")
-        "testImplementation"("io.kotest:kotest-assertions-core:$kotestVersion")
-        "testImplementation"("io.kotest:kotest-property:$kotestVersion")
+        "testImplementation"(rootProject.libs.kotest.runner.junit5)
+        "testImplementation"(rootProject.libs.kotest.assertions.core)
+        "testImplementation"(rootProject.libs.kotest.property)
     }
 
     tasks.withType<Test> {

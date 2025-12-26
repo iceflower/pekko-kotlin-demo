@@ -2,15 +2,13 @@ plugins {
     application
 }
 
-val scalaBinaryVersion: String by rootProject.extra
-
 dependencies {
-    implementation("org.apache.pekko:pekko-actor-typed_$scalaBinaryVersion")
-    implementation("org.apache.pekko:pekko-stream_$scalaBinaryVersion")
-    implementation("org.apache.pekko:pekko-slf4j_$scalaBinaryVersion")
-    implementation("ch.qos.logback:logback-classic:1.5.21")
+    implementation(libs.pekko.actor.typed)
+    implementation(libs.pekko.stream)
+    implementation(libs.pekko.slf4j)
+    implementation(libs.logback.classic)
 
-    testImplementation("org.apache.pekko:pekko-actor-testkit-typed_$scalaBinaryVersion")
+    testImplementation(libs.pekko.actor.testkit.typed)
 }
 
 application {

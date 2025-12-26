@@ -2,31 +2,28 @@ plugins {
     application
 }
 
-val scalaBinaryVersion: String by rootProject.extra
-val exposedVersion = "1.0.0-rc-4"
-
 dependencies {
     // Pekko
-    implementation("org.apache.pekko:pekko-actor-typed_$scalaBinaryVersion")
-    implementation("org.apache.pekko:pekko-slf4j_$scalaBinaryVersion")
+    implementation(libs.pekko.actor.typed)
+    implementation(libs.pekko.slf4j)
 
     // JetBrains Exposed
-    implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
-    implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
-    implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
-    implementation("org.jetbrains.exposed:exposed-kotlin-datetime:$exposedVersion")
+    implementation(libs.exposed.core)
+    implementation(libs.exposed.dao)
+    implementation(libs.exposed.jdbc)
+    implementation(libs.exposed.kotlin.datetime)
 
     // H2 Database (embedded, for demo)
-    implementation("com.h2database:h2:2.2.224")
+    implementation(libs.h2.database)
 
     // HikariCP for connection pooling
-    implementation("com.zaxxer:HikariCP:5.1.0")
+    implementation(libs.hikaricp)
 
     // Logging
-    implementation("ch.qos.logback:logback-classic:1.5.21")
+    implementation(libs.logback.classic)
 
     // Test
-    testImplementation("org.apache.pekko:pekko-actor-testkit-typed_$scalaBinaryVersion")
+    testImplementation(libs.pekko.actor.testkit.typed)
 }
 
 application {

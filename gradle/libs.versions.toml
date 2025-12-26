@@ -1,0 +1,117 @@
+[versions]
+# Language & Platform
+kotlin = "2.3.0"
+scala-binary = "2.13"
+
+# Pekko
+pekko = "1.4.0"
+pekko-http = "1.1.0"
+
+# Spring Boot
+spring-boot = "4.0.1"
+spring-boot-legacy = "3.5.0"
+spring-dependency-management = "1.1.7"
+
+# Testing
+kotest = "6.0.5"
+
+# Logging
+logback = "1.5.21"
+
+# Serialization
+jackson = "2.17.0"
+
+# gRPC & Protobuf
+grpc = "1.76.2"
+protobuf = "4.29.3"
+protobuf-gradle-plugin = "0.9.6"
+
+# Database
+exposed = "1.0.0-rc-4"
+h2 = "2.2.224"
+hikaricp = "5.1.0"
+leveldb = "0.12"
+
+# Misc
+javax-annotation = "1.3.2"
+foojay-resolver = "1.0.0"
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
+spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
+spring-boot-legacy = { id = "org.springframework.boot", version.ref = "spring-boot-legacy" }
+spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "spring-dependency-management" }
+protobuf = { id = "com.google.protobuf", version.ref = "protobuf-gradle-plugin" }
+foojay-resolver = { id = "org.gradle.toolchains.foojay-resolver-convention", version.ref = "foojay-resolver" }
+
+[libraries]
+# Pekko Core (using scalaBinaryVersion placeholder - requires string interpolation in build files)
+pekko-bom = { module = "org.apache.pekko:pekko-bom_2.13", version.ref = "pekko" }
+pekko-actor-typed = { module = "org.apache.pekko:pekko-actor-typed_2.13" }
+pekko-stream = { module = "org.apache.pekko:pekko-stream_2.13" }
+pekko-slf4j = { module = "org.apache.pekko:pekko-slf4j_2.13" }
+pekko-cluster-typed = { module = "org.apache.pekko:pekko-cluster-typed_2.13" }
+pekko-cluster-tools = { module = "org.apache.pekko:pekko-cluster-tools_2.13" }
+pekko-serialization-jackson = { module = "org.apache.pekko:pekko-serialization-jackson_2.13" }
+pekko-persistence-typed = { module = "org.apache.pekko:pekko-persistence-typed_2.13" }
+
+# Pekko HTTP
+pekko-http = { module = "org.apache.pekko:pekko-http_2.13", version.ref = "pekko-http" }
+pekko-http-jackson = { module = "org.apache.pekko:pekko-http-jackson_2.13", version.ref = "pekko-http" }
+
+# Pekko Testing
+pekko-actor-testkit-typed = { module = "org.apache.pekko:pekko-actor-testkit-typed_2.13" }
+pekko-stream-testkit = { module = "org.apache.pekko:pekko-stream-testkit_2.13" }
+pekko-http-testkit = { module = "org.apache.pekko:pekko-http-testkit_2.13", version.ref = "pekko-http" }
+pekko-persistence-testkit = { module = "org.apache.pekko:pekko-persistence-testkit_2.13" }
+
+# Spring Boot Starters
+spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web" }
+spring-boot-starter-webflux = { module = "org.springframework.boot:spring-boot-starter-webflux" }
+spring-boot-starter-websocket = { module = "org.springframework.boot:spring-boot-starter-websocket" }
+spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
+
+# Logging
+logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+
+# Jackson
+jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
+
+# Kotlin
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib" }
+kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect" }
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test" }
+kotlin-test-junit5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5" }
+
+# Kotest
+kotest-runner-junit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
+kotest-assertions-core = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
+kotest-property = { module = "io.kotest:kotest-property", version.ref = "kotest" }
+
+# gRPC
+grpc-stub = { module = "io.grpc:grpc-stub", version.ref = "grpc" }
+grpc-protobuf = { module = "io.grpc:grpc-protobuf", version.ref = "grpc" }
+grpc-netty-shaded = { module = "io.grpc:grpc-netty-shaded", version.ref = "grpc" }
+protobuf-java = { module = "com.google.protobuf:protobuf-java", version.ref = "protobuf" }
+
+# Database
+exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposed" }
+exposed-dao = { module = "org.jetbrains.exposed:exposed-dao", version.ref = "exposed" }
+exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }
+exposed-kotlin-datetime = { module = "org.jetbrains.exposed:exposed-kotlin-datetime", version.ref = "exposed" }
+h2-database = { module = "com.h2database:h2", version.ref = "h2" }
+hikaricp = { module = "com.zaxxer:HikariCP", version.ref = "hikaricp" }
+leveldb = { module = "org.iq80.leveldb:leveldb", version.ref = "leveldb" }
+
+# Misc
+javax-annotation-api = { module = "javax.annotation:javax.annotation-api", version.ref = "javax-annotation" }
+
+[bundles]
+pekko-core = ["pekko-actor-typed", "pekko-stream", "pekko-slf4j"]
+pekko-cluster = ["pekko-cluster-typed", "pekko-serialization-jackson"]
+pekko-cluster-full = ["pekko-cluster-typed", "pekko-cluster-tools", "pekko-serialization-jackson"]
+pekko-http-full = ["pekko-http", "pekko-http-jackson"]
+kotest = ["kotest-runner-junit5", "kotest-assertions-core", "kotest-property"]
+exposed = ["exposed-core", "exposed-dao", "exposed-jdbc", "exposed-kotlin-datetime"]
+grpc = ["grpc-stub", "grpc-protobuf", "grpc-netty-shaded", "protobuf-java"]

@@ -2,29 +2,29 @@ import com.google.protobuf.gradle.*
 
 plugins {
     application
-    id("com.google.protobuf") version "0.9.6"
+    alias(libs.plugins.protobuf)
 }
 
-val scalaBinaryVersion: String by rootProject.extra
+// Version catalog에서 버전을 참조하기 위해 정의
 val grpcVersion = "1.76.2"
 val protobufVersion = "4.29.3"
 
 dependencies {
-    implementation("org.apache.pekko:pekko-actor-typed_$scalaBinaryVersion")
-    implementation("org.apache.pekko:pekko-stream_$scalaBinaryVersion")
-    implementation("org.apache.pekko:pekko-slf4j_$scalaBinaryVersion")
-    implementation("ch.qos.logback:logback-classic:1.5.21")
+    implementation(libs.pekko.actor.typed)
+    implementation(libs.pekko.stream)
+    implementation(libs.pekko.slf4j)
+    implementation(libs.logback.classic)
 
     // gRPC dependencies
-    implementation("io.grpc:grpc-stub:$grpcVersion")
-    implementation("io.grpc:grpc-protobuf:$grpcVersion")
-    implementation("io.grpc:grpc-netty-shaded:$grpcVersion")
-    implementation("com.google.protobuf:protobuf-java:$protobufVersion")
+    implementation(libs.grpc.stub)
+    implementation(libs.grpc.protobuf)
+    implementation(libs.grpc.netty.shaded)
+    implementation(libs.protobuf.java)
 
     // For gRPC service implementation
-    implementation("javax.annotation:javax.annotation-api:1.3.2")
+    implementation(libs.javax.annotation.api)
 
-    testImplementation("org.apache.pekko:pekko-actor-testkit-typed_$scalaBinaryVersion")
+    testImplementation(libs.pekko.actor.testkit.typed)
 }
 
 protobuf {
@@ -32,14 +32,14 @@ protobuf {
         artifact = "com.google.protobuf:protoc:$protobufVersion"
     }
     plugins {
-        id("grpc") {
+        create("grpc") {
             artifact = "io.grpc:protoc-gen-grpc-java:$grpcVersion"
         }
     }
     generateProtoTasks {
-        all().forEach {
-            it.plugins {
-                id("grpc")
+        all().forEach { task ->
+            task.plugins {
+                create("grpc")
             }
         }
     }
